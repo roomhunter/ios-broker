@@ -7,8 +7,9 @@
 //
 
 import Foundation
+import CoreLocation
 
-class Apartment {
+class ApartmentModel {
     
     static let basicInformationArray = ["Address", "Description", "Total Price", "Order Price", "Broker Fee", "How Many Bedrooms", "How Many Bathrooms", "How Many Living Rooms", "Which Floor", "Application Fee"]
     static let apartmentAmenitiesArray = ["Electricity Fee Included", "Water Fee Included", "Gas Fee Included", "Dish Washer", "Microwave", "Oven", "Air Conditioner", "Washing Machine", "Dryer", "Heater", "Furniture"]
@@ -25,8 +26,10 @@ class Apartment {
     
     var images = [String?]()
     var moveinDate = NSDate()
+    var coordinate: [Double]?
     
     let api = APIModel.sharedInstance
+    let geoCoder = CLGeocoder()
     
     var requestData: NSDictionary {
         var dict = NSMutableDictionary()
@@ -63,8 +66,7 @@ class Apartment {
         dict["parking"] = buildingFacilitiesDict["Parking"]
         dict["additionalInfo1"] = additionalInfo1
         dict["additionalInfo2"] = additionalInfo2
-        
-//        dict["coordinates"] = 
+        dict["coordinates"] = coordinate!
 //        dict["qrcode"] =
 //        dict["videos"] = 
 //        dict["status"] =
@@ -96,20 +98,34 @@ class Apartment {
     init() {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
 
-        for item in Apartment.basicInformationArray {
+        for item in ApartmentModel.basicInformationArray {
             basicInformationDict[item] = ""
         }
-        for item in Apartment.apartmentAmenitiesArray {
+        for item in ApartmentModel.apartmentAmenitiesArray {
             apartmentAmenitiesDict[item] = false
         }
-        for item in Apartment.buildingFacilitiesArray {
+        for item in ApartmentModel.buildingFacilitiesArray {
             buildingFacilitiesDict[item] = false
         }
     }
     
     func submit(success: NSDictionary -> Void, fail: NSError -> Void) {
         println(requestData)
-        api.addApartment(requestData, success: success, fail: fail)
+        let address = basicInformationDict["Address"]!
+        geoCoder.geocodeAddressString(address, completionHandler: {
+            (placemarks: [AnyObject]!, error: NSError!) -> Void in
+            if error == nil {
+                return fail(error)
+            }
+            if let placemark = placemarks?[0] as? CLPlacemark {
+                let location = placemark.location.coordinate
+                self.coordinate = [location.latitude, location.longitude]
+                self.api.addApartment(self.requestData, success: success, fail: fail)
+            }
+            else {
+                fail(error)
+            }
+        })
     }
     
     func convertImages(images: [String?]) -> [String] {
@@ -120,39 +136,39 @@ class Apartment {
         return urls
     }
     func getBasicInformationAtIndex(index: Int) -> String {
-        if index < 0 || index >= Apartment.basicInformationArray.count {
+        if index < 0 || index >= ApartmentModel.basicInformationArray.count {
             return ""
         }
-        return basicInformationDict[Apartment.basicInformationArray[index]]!
+        return basicInformationDict[ApartmentModel.basicInformationArray[index]]!
     }
     func getApartmentAmenitiesAtIndex(index: Int) -> Bool {
-        if index < 0 || index >= Apartment.apartmentAmenitiesArray.count {
+        if index < 0 || index >= ApartmentModel.apartmentAmenitiesArray.count {
             return false
         }
-        return apartmentAmenitiesDict[Apartment.apartmentAmenitiesArray[index]]!
+        return apartmentAmenitiesDict[ApartmentModel.apartmentAmenitiesArray[index]]!
     }
     func getBuildingFacilitiesAtIndex(index: Int) -> Bool {
-        if index < 0 || index >= Apartment.buildingFacilitiesArray.count {
+        if index < 0 || index >= ApartmentModel.buildingFacilitiesArray.count {
             return false
         }
-        return buildingFacilitiesDict[Apartment.buildingFacilitiesArray[index]]!
+        return buildingFacilitiesDict[ApartmentModel.buildingFacilitiesArray[index]]!
     }
     func setBasicInformationAtIndex(index: Int, value: String) {
-        if index < 0 || index >= Apartment.basicInformationArray.count {
+        if index < 0 || index >= ApartmentModel.basicInformationArray.count {
             return
         }
-        basicInformationDict[Apartment.basicInformationArray[index]] = value
+        basicInformationDict[ApartmentModel.basicInformationArray[index]] = value
     }
     func setApartmentAmenitiesAtIndex(index: Int, value: Bool) {
-        if index < 0 || index >= Apartment.apartmentAmenitiesArray.count {
+        if index < 0 || index >= ApartmentModel.apartmentAmenitiesArray.count {
             return
         }
-        apartmentAmenitiesDict[Apartment.apartmentAmenitiesArray[index]] = value
+        apartmentAmenitiesDict[ApartmentModel.apartmentAmenitiesArray[index]] = value
     }
     func setBuildingFacilitiesAtIndex(index: Int, value: Bool) {
-        if index < 0 || index >= Apartment.buildingFacilitiesArray.count {
+        if index < 0 || index >= ApartmentModel.buildingFacilitiesArray.count {
             return
         }
-        buildingFacilitiesDict[Apartment.buildingFacilitiesArray[index]] = value
+        buildingFacilitiesDict[ApartmentModel.buildingFacilitiesArray[index]] = value
     }
 }

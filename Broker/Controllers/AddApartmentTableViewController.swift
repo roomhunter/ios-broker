@@ -9,7 +9,7 @@
 import UIKit
 import AssetsLibrary
 
-class AddApartmentTableViewController: UITableViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class AddApartmentTableViewController: UITableViewController, UICollectionViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     let imagesActionSheet = UIActionSheet(title: "Image From", delegate: nil, cancelButtonTitle: "Cancel", destructiveButtonTitle: "From Library")
     
@@ -18,15 +18,21 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDa
     var submitButton: ApartmentSubmitButtonCell?
     var uploadRequests = [AWSS3TransferManagerUploadRequest?]()
     var uploadFileURLs = [NSURL?]()
+    var aptFormDataSource: ApartmentFormDataSource?
     
-    var apartment = Apartment()
+    var apartment = ApartmentModel()
+    
+    required init!(coder aDecoder: NSCoder!) {
+        super.init(coder: aDecoder)
+        aptFormDataSource = ApartmentFormDataSource(addAptCtrl: self)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.edgesForExtendedLayout = UIRectEdge.All;
         self.tableView.contentInset = UIEdgeInsetsMake(0, 0, CGRectGetHeight(self.tabBarController!.tabBar.frame), 0)
-        
+        self.tableView.dataSource = aptFormDataSource
         imagesActionSheet.delegate = self
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
             imagesActionSheet.addButtonWithTitle("Take Photo")
@@ -83,51 +89,7 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDa
         upload(uploadRequest)
         collectionView?.reloadData()
     }
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return uploadRequests.count + 1
-    }
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("UploadingImageCell", forIndexPath: indexPath) as! UploadingImageCell
-        
-        let row = indexPath.row
-        
-        if row == uploadRequests.count {
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier("AddImageButtonCell", forIndexPath: indexPath) as! UICollectionViewCell
-            return cell
-        }
-        
-        if let uploadRequest = self.uploadRequests[row] {
-            if let data = NSData(contentsOfURL: uploadRequest.body) {
-                cell.imageView.image = UIImage(data: data)
-            }
-            switch uploadRequest.state {
-            case .Running:
-//                if let data = NSData(contentsOfURL: uploadRequest.body) {
-//                    cell.imageView.image = UIImage(data: data)
-//                }
-                uploadRequest.uploadProgress = { (bytesSent, totalBytesSent, totalBytesExpectedToSend) -> Void in
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        if totalBytesExpectedToSend > 0 {
-                            cell.progress = Float(Double(totalBytesSent) / Double(totalBytesExpectedToSend))
-                        }
-                    })
-                }
-                
-            case .Completed:
-                cell.progress = 1.0
-                
-                
-            default:
-                cell.imageView.image = nil
-                cell.progress = -1.0
-            }
-        }
-//        if let downloadFileURL = self.apartment.images[indexPath.row] {
-//            cell.progress = 1.0
-//        }
-        
-        return cell
-    }
+
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let row = indexPath.row
         // last item
@@ -137,56 +99,15 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDa
         }
     }
 
-    // MARK: - Table view data source
+    // MARK: - Table view delegate
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
-        return 5
-    }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
-        // Return the number of rows in the section.
-        switch section {
-        case 0:
-            // + 1 is the move in date cell
-            return Apartment.basicInformationArray.count + 1
-        case 1:
-            // + 1 is the additional description
-            return Apartment.apartmentAmenitiesArray.count + 1
-        case 2:
-            // + 1 is the additional description
-            return Apartment.buildingFacilitiesArray.count + 1
-        case 3:
-            return 1
-        case 4:
-            return 1
-        default:
-            return 0
-        }
-    }
-    
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch section {
-        case 0:
-            return "Basic Information"
-        case 1:
-            return "Apartment Amenities"
-        case 2:
-            return "Building Facilities"
-        case 3:
-            return "Apartment Images"
-        default:
-            return ""
-        }
-    }
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         let section = indexPath.section
         let row = indexPath.row
         switch section {
         case 0:
-            if row < Apartment.basicInformationArray.count  {
+            if row < ApartmentModel.basicInformationArray.count  {
                 // text cell
                 return 44
             }
@@ -240,85 +161,7 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDa
             
         }
     }
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let section = indexPath.section
-        let row = indexPath.row
-        switch section {
-        case 0:
-            if row < Apartment.basicInformationArray.count {
-                let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentTextCell", forIndexPath: indexPath) as! ApartmentTextCell
-                cell.itemTextField.placeholder = Apartment.basicInformationArray[row]
-                if row > 1 {
-                    cell.keyboardType = UIKeyboardType.NumberPad
-                }
-                else {
-                    cell.keyboardType = UIKeyboardType.ASCIICapable
-                }
-                cell.itemTextField.text = apartment.getBasicInformationAtIndex(row)
-                cell.itemTextField.tag = row
-                cell.itemTextField.addTarget(self, action: "textFieldsDidChange:", forControlEvents: UIControlEvents.EditingDidEnd)
-                return cell
-            }
-            else {
-                let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentDateCell", forIndexPath: indexPath) as! ApartmentDateCell
-                cell.moveinDate = apartment.moveinDate
-                cell.datePicker.addTarget(self, action: "dateDidChange:", forControlEvents: UIControlEvents.ValueChanged)
-                return cell
-            }
-            
-        case 1:
-            if row < Apartment.apartmentAmenitiesArray.count {
-                let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentSwitchCell", forIndexPath: indexPath) as! ApartmentSwitchCell
-                cell.itemLabel.text = Apartment.apartmentAmenitiesArray[row]
-                cell.itemSwitch.tag = row + 100
-                cell.on = apartment.getApartmentAmenitiesAtIndex(row)
-                cell.itemSwitch.addTarget(self, action: "switchDidChange:", forControlEvents: UIControlEvents.ValueChanged)
-                return cell
-            }
-            else {
-                let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentTextCell", forIndexPath: indexPath) as! ApartmentTextCell
-                cell.itemTextField.placeholder = "Additional Info for room amenities"
-                cell.itemTextField.text = apartment.additionalInfo1
-                cell.itemTextField.tag = 101
-                cell.keyboardType = UIKeyboardType.ASCIICapable
-                cell.itemTextField.addTarget(self, action: "textFieldsDidChange:", forControlEvents: UIControlEvents.EditingDidEnd)
-                return cell
-            }
-        case 2:
-            if row < Apartment.buildingFacilitiesArray.count {
-                let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentSwitchCell", forIndexPath: indexPath) as! ApartmentSwitchCell
-                cell.itemLabel.text = Apartment.buildingFacilitiesArray[row]
-                cell.itemSwitch.tag = row + 200
-                cell.on = apartment.getBuildingFacilitiesAtIndex(row)
-                cell.itemSwitch.addTarget(self, action: "switchDidChange:", forControlEvents: UIControlEvents.ValueChanged)
-                return cell
-            }
-            else {
-                let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentTextCell", forIndexPath: indexPath) as! ApartmentTextCell
-                cell.itemTextField.placeholder = "Additional Info for building facilities"
-                cell.itemTextField.text = apartment.additionalInfo2
-                cell.itemTextField.tag = 102
-                cell.keyboardType = UIKeyboardType.ASCIICapable
-                cell.itemTextField.addTarget(self, action: "textFieldsDidChange:", forControlEvents: UIControlEvents.EditingDidEnd)
-
-                return cell
-            }
-        case 3:
-            let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentImagesCell", forIndexPath: indexPath) as! ApartmentImagesCell
-            cell.imagesCollectionView.dataSource = self
-            cell.imagesCollectionView.delegate = self
-            collectionView = cell.imagesCollectionView
-            return cell
-        case 4:
-            let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentSubmitButtonCell", forIndexPath: indexPath) as! ApartmentSubmitButtonCell
-            submitButton = cell
-            
-            return cell
-        default:
-            return UITableViewCell()
-        }
-    }
-    
+        
     func upload(uploadRequest: AWSS3TransferManagerUploadRequest) {
         
         let transferManager = AWSS3TransferManager.defaultS3TransferManager()

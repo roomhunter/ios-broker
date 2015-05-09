@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 roomhunter. All rights reserved.
 //
 import Foundation
-import UIKit
 
 class APIModel {
     var session: NSURLSession
