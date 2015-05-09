@@ -1,0 +1,43 @@
+PODS:
+  - AWSCore (2.1.1):
+    - Bolts (~> 1.1.0)
+    - GZIP (~> 1.0.3)
+    - Mantle (~> 1.4)
+    - Reachability (~> 3.1)
+    - UICKeyChainStore (~> 2.0)
+    - XMLDictionary (~> 1.4.0)
+  - AWSS3 (2.1.1):
+    - AWSCore (= 2.1.1)
+    - Bolts (~> 1.1.0)
+    - Mantle (~> 1.4)
+    - TMCache (~> 1.2.1)
+  - Bolts (1.1.5):
+    - Bolts/AppLinks (= 1.1.5)
+    - Bolts/Tasks (= 1.1.5)
+  - Bolts/AppLinks (1.1.5):
+    - Bolts/Tasks
+  - Bolts/Tasks (1.1.5)
+  - GZIP (1.0.3)
+  - Mantle (1.5.4):
+    - Mantle/extobjc (= 1.5.4)
+  - Mantle/extobjc (1.5.4)
+  - Reachability (3.2)
+  - TMCache (1.2.4)
+  - UICKeyChainStore (2.0.4)
+  - XMLDictionary (1.4)
+
+DEPENDENCIES:
+  - AWSS3 (~> 2.1.0)
+
+SPEC CHECKSUMS:
+  AWSCore: 0e82eabc27a96d765b1e2ad4d30b96c1cd298300
+  AWSS3: 891d269735be0f3c63eab5a2d1ee9d788f2c64ee
+  Bolts: aac24961496d504aa56fc267cde95162a71bac39
+  GZIP: f0863fda354e8f83316508c0a2c7bbe385e39129
+  Mantle: 60acd0cd363e27d945bda0a6b8e90577112d28f3
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  TMCache: a93984b045a5ee84bd8941bd5e0b54296059cc52
+  UICKeyChainStore: 69eb0c3a6f669bccf16ba88de3b9069b71501361
+  XMLDictionary: f9f51601ba76678b594ab485f2b00ec1fed23724
+
+COCOAPODS: 0.37.1
