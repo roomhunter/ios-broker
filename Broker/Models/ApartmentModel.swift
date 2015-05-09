@@ -75,11 +75,16 @@ class Apartment {
     
     
     var isComplete: Bool {
+        // at least 8 images
+        if images.count < 8 {
+            return false
+        }
         for url in images {
             if url == nil {
                 return false
             }
         }
+        // text fileds shoud be filled out
         for (index, value) in basicInformationDict {
             if value.isEmpty {
                 return false

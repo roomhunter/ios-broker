@@ -8,7 +8,7 @@
         <!--Login Controller-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
-                <viewController id="9pv-A4-QxB" customClass="LoginController" customModule="agent" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="9pv-A4-QxB" customClass="LoginController" customModule="Broker" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Ia1-K6-d13"/>
                         <viewControllerLayoutGuide type="bottom" id="4ug-Mw-9AY"/>
@@ -107,14 +107,14 @@
         <!--Add-->
         <scene sceneID="XOJ-iX-Eic">
             <objects>
-                <tableViewController id="Q1O-CT-dTM" customClass="AddApartmentTableViewController" customModule="agent" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="Q1O-CT-dTM" customClass="AddApartmentTableViewController" customModule="Broker" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="interactive" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="ZJC-FA-LMD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <gestureRecognizers/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ApartmentTextCell" rowHeight="44" id="ikn-d1-1M2" customClass="ApartmentTextCell" customModule="agent" customModuleProvider="target">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ApartmentTextCell" rowHeight="44" id="ikn-d1-1M2" customClass="ApartmentTextCell" customModule="Broker" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ikn-d1-1M2" id="42t-Eq-uGj">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -145,7 +145,7 @@
                                     <outlet property="itemTextField" destination="h1w-YT-D9Z" id="7C7-Nh-gt3"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ApartmentSwitchCell" rowHeight="44" id="jyX-Wo-Nxg" customClass="ApartmentSwitchCell" customModule="agent" customModuleProvider="target">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ApartmentSwitchCell" rowHeight="44" id="jyX-Wo-Nxg" customClass="ApartmentSwitchCell" customModule="Broker" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jyX-Wo-Nxg" id="4HS-F9-8Bk">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -202,7 +202,7 @@
                                     <outlet property="itemSwitchResult" destination="4of-ao-VsF" id="eeb-UJ-jFs"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ApartmentDateCell" rowHeight="200" id="VTn-5U-VCx" customClass="ApartmentDateCell" customModule="agent" customModuleProvider="target">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ApartmentDateCell" rowHeight="200" id="VTn-5U-VCx" customClass="ApartmentDateCell" customModule="Broker" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VTn-5U-VCx" id="fAL-cy-6Af">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -250,22 +250,22 @@
                                     <outlet property="dateSelectedLabel" destination="5fA-Pk-x0Q" id="SoR-UV-vyr"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ApartmentImagesCell" rowHeight="142" id="SoA-tP-pSP" customClass="ApartmentImagesCell" customModule="agent" customModuleProvider="target">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ApartmentImagesCell" rowHeight="200" id="SoA-tP-pSP" customClass="ApartmentImagesCell" customModule="Broker" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SoA-tP-pSP" id="2Yk-GB-sEb">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="fkC-ep-dmR">
-                                            <rect key="frame" x="-8" y="0.0" width="391" height="141"/>
+                                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="fkC-ep-dmR">
+                                            <rect key="frame" x="-8" y="0.0" width="391" height="199"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="5pI-Gq-QtX">
+                                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="5" id="5pI-Gq-QtX">
                                                 <size key="itemSize" width="80" height="80"/>
                                                 <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                 <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                                 <inset key="sectionInset" minX="5" minY="5" maxX="5" maxY="5"/>
                                             </collectionViewFlowLayout>
                                             <cells>
-                                                <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="UploadingImageCell" id="pVV-uI-fSS" customClass="UploadingImageCell" customModule="agent" customModuleProvider="target">
+                                                <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="UploadingImageCell" id="pVV-uI-fSS" customClass="UploadingImageCell" customModule="Broker" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -275,14 +275,15 @@
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WAJ-If-Bdb">
                                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
                                                             </imageView>
-                                                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" misplaced="YES" progress="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="u9W-GN-kth">
-                                                                <rect key="frame" x="0.0" y="77" width="80" height="3"/>
+                                                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="u9W-GN-kth">
+                                                                <rect key="frame" x="0.0" y="78" width="80" height="2"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="3" id="1cc-xL-zJL"/>
                                                                     <constraint firstAttribute="height" constant="4" id="I8B-nV-Dx9"/>
                                                                 </constraints>
                                                                 <variation key="default">
                                                                     <mask key="constraints">
+                                                                        <exclude reference="1cc-xL-zJL"/>
                                                                         <exclude reference="I8B-nV-Dx9"/>
                                                                     </mask>
                                                                 </variation>
@@ -325,14 +326,14 @@
                                                         <outlet property="statusLabel" destination="32y-k5-ceM" id="DGK-fD-xm1"/>
                                                     </connections>
                                                 </collectionViewCell>
-                                                <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AddImageButtonCell" id="CWU-LD-dfp" customClass="AddImageButtonCell" customModule="agent" customModuleProvider="target">
+                                                <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AddImageButtonCell" id="CWU-LD-dfp" customClass="AddImageButtonCell" customModule="Broker" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                         <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add Image" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pb9-Hb-lkW">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add Image (at least 8)" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pb9-Hb-lkW">
                                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -362,7 +363,7 @@
                                     <outlet property="imagesCollectionView" destination="fkC-ep-dmR" id="hR4-jm-8b3"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ApartmentSubmitButtonCell" rowHeight="44" id="6Eo-dO-Zgc" customClass="ApartmentSubmitButtonCell" customModule="agent" customModuleProvider="target">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ApartmentSubmitButtonCell" rowHeight="44" id="6Eo-dO-Zgc" customClass="ApartmentSubmitButtonCell" customModule="Broker" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6Eo-dO-Zgc" id="cZo-lu-by7">
                                     <autoresizingMask key="autoresizingMask"/>

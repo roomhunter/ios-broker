@@ -116,6 +116,7 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDa
             case .Completed:
                 cell.progress = 1.0
                 
+                
             default:
                 cell.imageView.image = nil
                 cell.progress = -1.0
@@ -186,18 +187,24 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDa
         switch section {
         case 0:
             if row < Apartment.basicInformationArray.count  {
+                // text cell
                 return 44
             }
             else {
+                // date picker
                 return 200
             }
         case 1:
+            // switch cell, apartments amenities
             return 44
         case 2:
+            // switch cell, building facilities
             return 44
         case 3:
-            return 200
+            // uploading images collection view
+            return 260
         case 4:
+            // submit button
             return 44
         default:
             return 0
@@ -319,8 +326,17 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDa
         transferManager.upload(uploadRequest).continueWithBlock { (task) -> AnyObject! in
             if task.result != nil {
                 if let index = self.indexOfUploadRequest(self.uploadRequests, uploadRequest: uploadRequest) {
-//                    self.uploadRequests[index] = nil
                     self.apartment.images[index] = "https://d1mnrj0eye9ccu.cloudfront.net/\(uploadRequest.key)"
+                    if self.apartment.isComplete {
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                            submitButton?.status = ApartmentSubmitButtonStatus.ReadyToSubmit
+                        })
+                    }
+                    else {
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                            submitButton?.status = ApartmentSubmitButtonStatus.Incomplete
+                        })
+                    }
                     
                     let indexPath = NSIndexPath(forRow: index, inSection: 0)
                     
@@ -370,12 +386,6 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDa
     
     func dateDidChange(sender: UIDatePicker) {
         apartment.moveinDate = sender.date
-        if apartment.isComplete {
-            submitButton?.status = ApartmentSubmitButtonStatus.ReadyToSubmit
-        }
-        else {
-            submitButton?.status = ApartmentSubmitButtonStatus.Incomplete
-        }
     }
     func switchDidChange(sender: UISwitch) {
         let tag = sender.tag
@@ -387,10 +397,6 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDa
 
         }
     }
-    
-//    func buildingFacilitiesDidChange(sender: UISwitch) {
-//        let tag = sender.tag
-//    }
     
     /*
     // MARK: - Navigation
