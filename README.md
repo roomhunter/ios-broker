@@ -4,13 +4,12 @@ Broker Client
 Tasks
 -----
 
--	[x] login
+- [x] login
+	- [x] token persistent in file system
 
-	-	[x] token persistent in file system
-
--	[x] add apartment
-
-	-	[x] images upload to S3
-	-	[x] basic information form of apartment
-	-	[ ] images synchronization with Ji's internal tool
+- [x] add apartment
+	- [x] images upload to S3
+	- [x] basic information form of apartment
+	- [ ] images synchronization with Ji's internal tool
+- [ ] list uploading history
 

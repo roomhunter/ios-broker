@@ -40,6 +40,7 @@
 /* Begin PBXFileReference section */
 		05EDF14D214ADF89D64F8A0E /* libPods-Broker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Broker.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		776FAC8B4FDD6D3CA72E743B /* Pods-Broker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Broker.release.xcconfig"; path = "Pods/Target Support Files/Pods-Broker/Pods-Broker.release.xcconfig"; sourceTree = "<group>"; };
+		BA3B4DF41AFE8BBD00AAB6E8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		BA41DAE11AFA896300AB9616 /* Broker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Broker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA41DAE51AFA896300AB9616 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BA41DAE61AFA896300AB9616 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -104,6 +105,7 @@
 		BA41DAD81AFA896300AB9616 = {
 			isa = PBXGroup;
 			children = (
+				BA3B4DF41AFE8BBD00AAB6E8 /* README.md */,
 				BA41DB161AFB3FB800AB9616 /* bridging-header.h */,
 				BA41DAE31AFA896300AB9616 /* Broker */,
 				BA41DAFB1AFA896300AB9616 /* BrokerTests */,
