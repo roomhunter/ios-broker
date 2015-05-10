@@ -17,8 +17,8 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDe
     var collectionView: UICollectionView?
     var submitButton: ApartmentSubmitButtonCell?
     var uploadRequests = [AWSS3TransferManagerUploadRequest?]()
-    var uploadFileURLs = [NSURL?]()
     var aptFormDataSource: ApartmentFormDataSource?
+    var imageThumbnails = [UIImage]()
     
     var apartment = ApartmentModel()
     
@@ -37,7 +37,6 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDe
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
             imagesActionSheet.addButtonWithTitle("Take Photo")
         }
-        imagesPicker.allowsEditing = true
         imagesPicker.delegate = self
         var error = NSErrorPointer()
 
@@ -60,7 +59,7 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDe
         case 0: // from library
             imagesPicker.sourceType = UIImagePickerControllerSourceType.SavedPhotosAlbum
             self.presentViewController(imagesPicker, animated: true, completion: nil)
-        case 1: // form camera
+        case 2: // form camera
             if buttonIndex != actionSheet.cancelButtonIndex {
                 imagesPicker.sourceType = UIImagePickerControllerSourceType.Camera
                 self.presentViewController(imagesPicker, animated: true, completion: nil)
@@ -71,30 +70,36 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDe
     }
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         picker.dismissViewControllerAnimated(true, completion: nil)
+        
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
-        let fileName = NSProcessInfo.processInfo().globallyUniqueString.stringByAppendingString(".png")
-        let filePath = NSTemporaryDirectory().stringByAppendingPathComponent("upload").stringByAppendingPathComponent(fileName)
-        let imageData = UIImagePNGRepresentation(image)
-        imageData.writeToFile(filePath, atomically: true)
         
-        let uploadRequest = AWSS3TransferManagerUploadRequest()
-        uploadRequest.body = NSURL(fileURLWithPath: filePath)
-        uploadRequest.key = "apartments/\(fileName)"
-        uploadRequest.bucket = "roomhunter-static"
-        uploadRequest.ACL = AWSS3ObjectCannedACL.PublicRead
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), { [unowned self] in
+
+            self.imageThumbnails.append(self.getThumbnailFrom(image))
+            let fileName = NSProcessInfo.processInfo().globallyUniqueString.stringByAppendingString(".jpeg")
+
+            let uploadRequest = AWSS3TransferManagerUploadRequest()
+            uploadRequest.body = NSURL(fileURLWithPath: self.getCompressedImageUrlFrom(image))
+            uploadRequest.key = "apartments/\(fileName)"
+            uploadRequest.bucket = "roomhunter-static"
+            uploadRequest.contentType = "image/jpeg"
+            uploadRequest.ACL = AWSS3ObjectCannedACL.PublicRead
+            
+            self.uploadRequests.append(uploadRequest)
+            self.apartment.imageUrls.append(nil)
+            
+            self.upload(uploadRequest)
+            dispatch_async(dispatch_get_main_queue(), { [unowned self] in
+                self.collectionView?.reloadData()
+            })
+        })
         
-        uploadRequests.append(uploadRequest)
-        apartment.images.append(nil)
-        
-        upload(uploadRequest)
-        collectionView?.reloadData()
     }
 
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let row = indexPath.row
         // last item
         if row + 1 == collectionView.numberOfItemsInSection(0) {
-            
             imagesActionSheet.showInView(self.tableView)
         }
     }
@@ -145,10 +150,16 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDe
                     }, fail: {(err: NSError) in
                         self.submitButton?.status = ApartmentSubmitButtonStatus.Failed
 
-                        let alertController = UIAlertController(title: "Failed", message: "Submit Error", preferredStyle: .Alert)
+                        let alertController = UIAlertController(title: "Failed", message: "Server Response Error", preferredStyle: .Alert)
                         
-                        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-                            
+                        let OKAction = UIAlertAction(title: "Retry", style: .Default) { (action) in
+                            submitButton?.status = ApartmentSubmitButtonStatus.ReadyToSubmit
+                        }
+                        if err.code == 1000 {
+                            alertController.message = "Cannot locate the address. Address shoud be in format as \"136 W 109th ST\""
+                        }
+                        else if err.code == 1001 {
+                            alertController.message = "Price, floor, number of rooms should be NUMBERS(1,2,3) only, no LETTERS(A,B,C)"
                         }
                         alertController.addAction(OKAction)
                         
@@ -161,29 +172,56 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDe
             
         }
     }
+    // helper functions
+    func getThumbnailFrom(originalImage: UIImage) -> UIImage {
+        let size = CGSize(width: 80, height: 80)
+        let scaledImage: UIImage
         
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        originalImage.drawInRect(CGRect(origin: CGPointZero, size: size))
+        scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return scaledImage
+    }
+    
+    func getCompressedImageUrlFrom(originalImage: UIImage) -> String {
+        let scaledImage: UIImage
+        let fileName = NSProcessInfo.processInfo().globallyUniqueString.stringByAppendingString(".jpeg")
+        let size = CGSizeApplyAffineTransform(originalImage.size, CGAffineTransformMakeScale(0.5, 0.5))
+        let filePath = NSTemporaryDirectory().stringByAppendingPathComponent("upload").stringByAppendingPathComponent(fileName)
+        let imageData: NSData
+        // explicitly scale 1, to prevent it from double the size again(retina)
+        UIGraphicsBeginImageContextWithOptions(size, false, 1)
+        originalImage.drawInRect(CGRect(origin: CGPointZero, size: size))
+        scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        imageData = UIImageJPEGRepresentation(scaledImage, 0.8)
+        imageData.writeToFile(filePath, atomically: true)
+        
+        return filePath
+    }
+    
     func upload(uploadRequest: AWSS3TransferManagerUploadRequest) {
         
         let transferManager = AWSS3TransferManager.defaultS3TransferManager()
         
-        transferManager.upload(uploadRequest).continueWithBlock { (task) -> AnyObject! in
+        transferManager.upload(uploadRequest).continueWithBlock { [unowned self] (task) -> AnyObject! in
+            // finished
             if task.result != nil {
                 if let index = self.indexOfUploadRequest(self.uploadRequests, uploadRequest: uploadRequest) {
-                    self.apartment.images[index] = "https://d1mnrj0eye9ccu.cloudfront.net/\(uploadRequest.key)"
-                    if self.apartment.isComplete {
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                            submitButton?.status = ApartmentSubmitButtonStatus.ReadyToSubmit
-                        })
-                    }
-                    else {
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                            submitButton?.status = ApartmentSubmitButtonStatus.Incomplete
-                        })
-                    }
                     
                     let indexPath = NSIndexPath(forRow: index, inSection: 0)
-                    
+                    self.apartment.imageUrls[index] = "https://d1mnrj0eye9ccu.cloudfront.net/\(uploadRequest.key)"
+
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
+
+                        if self.apartment.isComplete {
+                            self.submitButton?.status = ApartmentSubmitButtonStatus.ReadyToSubmit
+                        }
+                        else {
+                            self.submitButton?.status = ApartmentSubmitButtonStatus.Incomplete
+                        }
                         self.collectionView?.reloadItemsAtIndexPaths([indexPath])
                     })
                 }

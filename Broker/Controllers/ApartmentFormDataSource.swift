@@ -17,24 +17,23 @@ class ApartmentFormDataSource: NSObject, UITableViewDataSource, UICollectionView
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return addAptCtrl.uploadRequests.count + 1
+        return addAptCtrl.imageThumbnails.count + 1
     }
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("UploadingImageCell", forIndexPath: indexPath) as! UploadingImageCell
-        
         let row = indexPath.row
         
-        if row == addAptCtrl.uploadRequests.count {
+        if row == addAptCtrl.imageThumbnails.count {
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier("AddImageButtonCell", forIndexPath: indexPath) as! UICollectionViewCell
             return cell
         }
         
+        cell.imageView.image = addAptCtrl.imageThumbnails[row]
+        
         if let uploadRequest = addAptCtrl.uploadRequests[row] {
-            if let data = NSData(contentsOfURL: uploadRequest.body) {
-                cell.imageView.image = UIImage(data: data)
-            }
             switch uploadRequest.state {
             case .Running:
+                // upload progress
                 uploadRequest.uploadProgress = { (bytesSent, totalBytesSent, totalBytesExpectedToSend) -> Void in
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         if totalBytesExpectedToSend > 0 {
@@ -45,7 +44,6 @@ class ApartmentFormDataSource: NSObject, UITableViewDataSource, UICollectionView
                 
             case .Completed:
                 cell.progress = 1.0
-                
                 
             default:
                 cell.imageView.image = nil
@@ -108,13 +106,13 @@ class ApartmentFormDataSource: NSObject, UITableViewDataSource, UICollectionView
                 }
                 cell.itemTextField.text = addAptCtrl.apartment.getBasicInformationAtIndex(row)
                 cell.itemTextField.tag = row
-                cell.itemTextField.addTarget(self, action: "textFieldsDidChange:", forControlEvents: UIControlEvents.EditingDidEnd)
+                cell.itemTextField.addTarget(addAptCtrl, action: "textFieldsDidChange:", forControlEvents: UIControlEvents.EditingDidEnd)
                 return cell
             }
             else {
                 let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentDateCell", forIndexPath: indexPath) as! ApartmentDateCell
                 cell.moveinDate = addAptCtrl.apartment.moveinDate
-                cell.datePicker.addTarget(self, action: "dateDidChange:", forControlEvents: UIControlEvents.ValueChanged)
+                cell.datePicker.addTarget(addAptCtrl, action: "dateDidChange:", forControlEvents: UIControlEvents.ValueChanged)
                 return cell
             }
             
@@ -124,7 +122,7 @@ class ApartmentFormDataSource: NSObject, UITableViewDataSource, UICollectionView
                 cell.itemLabel.text = ApartmentModel.apartmentAmenitiesArray[row]
                 cell.itemSwitch.tag = row + 100
                 cell.on = addAptCtrl.apartment.getApartmentAmenitiesAtIndex(row)
-                cell.itemSwitch.addTarget(self, action: "switchDidChange:", forControlEvents: UIControlEvents.ValueChanged)
+                cell.itemSwitch.addTarget(addAptCtrl, action: "switchDidChange:", forControlEvents: UIControlEvents.ValueChanged)
                 return cell
             }
             else {
@@ -133,7 +131,7 @@ class ApartmentFormDataSource: NSObject, UITableViewDataSource, UICollectionView
                 cell.itemTextField.text = addAptCtrl.apartment.additionalInfo1
                 cell.itemTextField.tag = 101
                 cell.keyboardType = UIKeyboardType.ASCIICapable
-                cell.itemTextField.addTarget(self, action: "textFieldsDidChange:", forControlEvents: UIControlEvents.EditingDidEnd)
+                cell.itemTextField.addTarget(addAptCtrl, action: "textFieldsDidChange:", forControlEvents: UIControlEvents.EditingDidEnd)
                 return cell
             }
         case 2:
@@ -142,7 +140,7 @@ class ApartmentFormDataSource: NSObject, UITableViewDataSource, UICollectionView
                 cell.itemLabel.text = ApartmentModel.buildingFacilitiesArray[row]
                 cell.itemSwitch.tag = row + 200
                 cell.on = addAptCtrl.apartment.getBuildingFacilitiesAtIndex(row)
-                cell.itemSwitch.addTarget(self, action: "switchDidChange:", forControlEvents: UIControlEvents.ValueChanged)
+                cell.itemSwitch.addTarget(addAptCtrl, action: "switchDidChange:", forControlEvents: UIControlEvents.ValueChanged)
                 return cell
             }
             else {
@@ -151,7 +149,7 @@ class ApartmentFormDataSource: NSObject, UITableViewDataSource, UICollectionView
                 cell.itemTextField.text = addAptCtrl.apartment.additionalInfo2
                 cell.itemTextField.tag = 102
                 cell.keyboardType = UIKeyboardType.ASCIICapable
-                cell.itemTextField.addTarget(self, action: "textFieldsDidChange:", forControlEvents: UIControlEvents.EditingDidEnd)
+                cell.itemTextField.addTarget(addAptCtrl, action: "textFieldsDidChange:", forControlEvents: UIControlEvents.EditingDidEnd)
                 
                 return cell
             }

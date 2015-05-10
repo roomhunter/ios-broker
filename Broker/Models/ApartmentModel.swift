@@ -24,29 +24,41 @@ class ApartmentModel {
     var additionalInfo1 = ""
     var additionalInfo2 = ""
     
-    var images = [String?]()
+    var imageUrls = [String?]()
     var moveinDate = NSDate()
     var coordinate: [Double]?
     
     let api = APIModel.sharedInstance
     let geoCoder = CLGeocoder()
     
-    var requestData: NSDictionary {
+    var requestData: NSDictionary? {
         var dict = NSMutableDictionary()
+        let totalPrice = basicInformationDict["Total Price"]?.toInt()
+        let orderPrice = basicInformationDict["Order Price"]?.toInt()
+        let brokerFee = basicInformationDict["Broker Fee"]?.toInt()
+        let bedrooms = basicInformationDict["How Many Bedrooms"]?.toInt()
+        let bathrooms = basicInformationDict["How Many Bathrooms"]?.toInt()
+        let livingrooms = basicInformationDict["How Many Living Rooms"]?.toInt()
+        let floor = basicInformationDict["Which Floor"]?.toInt()
+        let applicationFee = basicInformationDict["Broker Fee"]?.toInt()
         
-        dict["totalPrice"] = basicInformationDict["Total Price"]
-        dict["orderPrice"] = basicInformationDict["Order Price"]
+        if totalPrice == nil || orderPrice == nil || brokerFee == nil || bedrooms == nil || bathrooms == nil || livingrooms == nil || floor == nil || applicationFee == nil {
+            return nil
+        }
+        
+        dict["totalPrice"] = totalPrice!
+        dict["orderPrice"] = orderPrice!
         dict["addressDescription"] = basicInformationDict["Address"]
         dict["city"] = "New York, NY, United States"
         dict["gist"] = basicInformationDict["Description"]
         dict["elevator"] = buildingFacilitiesDict["Elevator"]
-        dict["brokerFee"] = basicInformationDict["Broker Fee"]
-        dict["beds"] = basicInformationDict["How Many Bedrooms"]
-        dict["bath"] = basicInformationDict["How Many Bathrooms"]
-        dict["livingroom"] = basicInformationDict["How Many Living Rooms"]
-        dict["floor"] = basicInformationDict["Which Floor"]
-        dict["images"] = convertImages(images)
-        dict["applicationFee"] = basicInformationDict["Broker Fee"]
+        dict["brokerFee"] = brokerFee!
+        dict["beds"] = bedrooms!
+        dict["bath"] = bathrooms!
+        dict["livingroom"] = livingrooms!
+        dict["floor"] = floor!
+        dict["images"] = convertImages(imageUrls)
+        dict["applicationFee"] = applicationFee!
         dict["moveinDate"] = dateFormatter.stringFromDate(moveinDate)
         dict["waterelecIncluded"] = apartmentAmenitiesDict["Water Fee Included"]
         dict["dishwasher"] = apartmentAmenitiesDict["Dish Washer"]
@@ -66,7 +78,7 @@ class ApartmentModel {
         dict["parking"] = buildingFacilitiesDict["Parking"]
         dict["additionalInfo1"] = additionalInfo1
         dict["additionalInfo2"] = additionalInfo2
-        dict["coordinates"] = coordinate!
+        dict["coordinates"] = coordinate
 //        dict["qrcode"] =
 //        dict["videos"] = 
 //        dict["status"] =
@@ -78,10 +90,10 @@ class ApartmentModel {
     
     var isComplete: Bool {
         // at least 8 images
-        if images.count < 8 {
+        if imageUrls.count < 8 {
             return false
         }
-        for url in images {
+        for url in imageUrls {
             if url == nil {
                 return false
             }
@@ -110,20 +122,25 @@ class ApartmentModel {
     }
     
     func submit(success: NSDictionary -> Void, fail: NSError -> Void) {
-        println(requestData)
         let address = basicInformationDict["Address"]!
-        geoCoder.geocodeAddressString(address, completionHandler: {
+        geoCoder.geocodeAddressString("\(address), New York", completionHandler: {
             (placemarks: [AnyObject]!, error: NSError!) -> Void in
-            if error == nil {
-                return fail(error)
+            if error != nil {
+                return fail(NSError(domain: "coordinate retreive", code: 1000, userInfo: nil))
             }
-            if let placemark = placemarks?[0] as? CLPlacemark {
+            if let placemark = placemarks[0] as? CLPlacemark {
                 let location = placemark.location.coordinate
                 self.coordinate = [location.latitude, location.longitude]
-                self.api.addApartment(self.requestData, success: success, fail: fail)
+                if let data = self.requestData {
+                    self.api.addApartment(data, success: success, fail: fail)
+                }
+                else {
+                    fail(NSError(domain: "number conversion", code: 1001, userInfo: nil))
+                }
             }
             else {
-                fail(error)
+                fail(NSError(domain: "coordinate retreive", code: 1000, userInfo: nil))
+
             }
         })
     }

@@ -9,7 +9,6 @@
 import Foundation
 
 class BrokerModel {
-//    var email = ""
     var token: String? {
         get {
             let userDefault = NSUserDefaults.standardUserDefaults()
@@ -24,8 +23,6 @@ class BrokerModel {
     }
     
     func update(email: String, token: String) {
-//        self.email = email
-//        self.token = token
         // store to file system
         let userDefault = NSUserDefaults.standardUserDefaults()
         userDefault.setObject(token, forKey: "token")
