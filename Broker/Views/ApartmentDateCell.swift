@@ -8,26 +8,26 @@
 
 import UIKit
 
+protocol ApartmentDateCellDelegate {
+    func didChangeDate(date: NSDate)
+}
 class ApartmentDateCell: UITableViewCell {
 
-    let dateFormatter = NSDateFormatter()
 
-    @IBOutlet var dateSelectedLabel: UILabel!
     @IBOutlet var datePicker: UIDatePicker!
     @IBAction func datePickerChanged(sender: UIDatePicker) {
         moveinDate = sender.date
+        delegate?.didChangeDate(sender.date)
     }
-    
+    var delegate: ApartmentDateCellDelegate?
     var moveinDate = NSDate() {
         didSet {
-            dateSelectedLabel.text = "Move-in Date: \(dateFormatter.stringFromDate(moveinDate))"
             datePicker.date = moveinDate
         }
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
 
         // Initialization code
     }

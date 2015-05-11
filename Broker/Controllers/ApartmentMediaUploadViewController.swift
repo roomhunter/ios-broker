@@ -1,45 +1,36 @@
 //
-//  AddApartmentTableViewController.swift
-//  agent
+//  ApartmentMediaUploadViewController.swift
+//  Broker
 //
-//  Created by to0 on 5/6/15.
+//  Created by to0 on 5/10/15.
 //  Copyright (c) 2015 roomhunter. All rights reserved.
 //
 
 import UIKit
-import AssetsLibrary
 
-class AddApartmentTableViewController: UITableViewController, UICollectionViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ApartmentMediaUploadViewController: UITableViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     let imagesActionSheet = UIActionSheet(title: "Image From", delegate: nil, cancelButtonTitle: "Cancel", destructiveButtonTitle: "From Library")
     
     let imagesPicker = UIImagePickerController()
     var collectionView: UICollectionView?
-    var submitButton: ApartmentSubmitButtonCell?
+    var submitButtonCell: ApartmentSubmitButtonCell?
     var uploadRequests = [AWSS3TransferManagerUploadRequest?]()
-    var aptFormDataSource: ApartmentFormDataSource?
     var imageThumbnails = [UIImage]()
     
-    var apartment = ApartmentModel()
-    
-    required init!(coder aDecoder: NSCoder!) {
-        super.init(coder: aDecoder)
-        aptFormDataSource = ApartmentFormDataSource(addAptCtrl: self)
-    }
-    
+    var newApartment: ApartmentModel!
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.edgesForExtendedLayout = UIRectEdge.All;
-        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, CGRectGetHeight(self.tabBarController!.tabBar.frame), 0)
-        self.tableView.dataSource = aptFormDataSource
+
+        // Do any additional setup after loading the view.
         imagesActionSheet.delegate = self
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
             imagesActionSheet.addButtonWithTitle("Take Photo")
         }
         imagesPicker.delegate = self
         var error = NSErrorPointer()
-
+        
         if !NSFileManager.defaultManager().createDirectoryAtPath(
             NSTemporaryDirectory().stringByAppendingPathComponent("upload"),
             withIntermediateDirectories: true,
@@ -53,7 +44,48 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDe
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 2
+    }
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        let section = indexPath.section
+        switch section {
+        case 0:
+            return 260
+        default:
+            return 44
+        }
+    }
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case 0:
+            return "Select Images"
+        default:
+            return nil
+        }
+    }
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        switch indexPath.section {
+        case 0:
+            let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentUploadingImagesCollectionCell", forIndexPath: indexPath) as! ApartmentUploadingImagesCollectionCell
+            cell.imagesCollectionView.dataSource = self
+            cell.imagesCollectionView.delegate = self
+            collectionView = cell.imagesCollectionView
+            return cell
+        
+        case 1:
+            let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentSubmitButtonCell", forIndexPath: indexPath) as! ApartmentSubmitButtonCell
+            submitButtonCell = cell
+            submitButtonCell?.state = newApartment.mediaState
+            return cell
+        default:
+            return UITableViewCell()
+        }
+
+    }
     func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
         switch buttonIndex {
         case 0: // from library
@@ -74,10 +106,10 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDe
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
         
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), { [unowned self] in
-
+            
             self.imageThumbnails.append(self.getThumbnailFrom(image))
             let fileName = NSProcessInfo.processInfo().globallyUniqueString.stringByAppendingString(".jpeg")
-
+            
             let uploadRequest = AWSS3TransferManagerUploadRequest()
             uploadRequest.body = NSURL(fileURLWithPath: self.getCompressedImageUrlFrom(image))
             uploadRequest.key = "apartments/\(fileName)"
@@ -86,16 +118,55 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDe
             uploadRequest.ACL = AWSS3ObjectCannedACL.PublicRead
             
             self.uploadRequests.append(uploadRequest)
-            self.apartment.imageUrls.append(nil)
+            self.newApartment?.imageUrls.append(nil)
             
             self.upload(uploadRequest)
             dispatch_async(dispatch_get_main_queue(), { [unowned self] in
                 self.collectionView?.reloadData()
+                })
             })
-        })
         
     }
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return imageThumbnails.count + 1
+    }
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("UploadingImageCell", forIndexPath: indexPath) as! UploadingImageCell
+        let row = indexPath.row
+        
+        if row == imageThumbnails.count {
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier("AddImageButtonCell", forIndexPath: indexPath) as! UICollectionViewCell
+            return cell
+        }
+        
+        cell.imageView.image = imageThumbnails[row]
+        
+        if let uploadRequest = uploadRequests[row] {
+            switch uploadRequest.state {
+            case .Running:
+                // upload progress
+                uploadRequest.uploadProgress = { (bytesSent, totalBytesSent, totalBytesExpectedToSend) -> Void in
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        if totalBytesExpectedToSend > 0 {
+                            cell.progress = Float(Double(totalBytesSent) / Double(totalBytesExpectedToSend))
+                        }
+                    })
+                }
+                
+            case .Completed:
+                cell.progress = 1.0
+                
+            default:
+                cell.imageView.image = nil
+                cell.progress = -1.0
+            }
+        }
+        
+        return cell
+    }
 
+    
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let row = indexPath.row
         // last item
@@ -103,63 +174,22 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDe
             imagesActionSheet.showInView(self.tableView)
         }
     }
-
-    // MARK: - Table view delegate
-
-
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        let section = indexPath.section
-        let row = indexPath.row
-        switch section {
-        case 0:
-            if row < ApartmentModel.basicInformationArray.count  {
-                // text cell
-                return 44
-            }
-            else {
-                // date picker
-                return 200
-            }
-        case 1:
-            // switch cell, apartments amenities
-            return 44
-        case 2:
-            // switch cell, building facilities
-            return 44
-        case 3:
-            // uploading images collection view
-            return 260
-        case 4:
-            // submit button
-            return 44
-        default:
-            return 0
-        }
-    }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let section = indexPath.section
-        // last section, the submit button
+        // last cell is the submit button
         if section + 1 == tableView.numberOfSections() {
-            // check all the fields
-            if apartment.isComplete {
-                submitButton?.status = ApartmentSubmitButtonStatus.Loading
-                apartment.submit({(res: NSDictionary) in
-                    submitButton?.status = ApartmentSubmitButtonStatus.Submitted
-
-                    }, fail: {(err: NSError) in
-                        self.submitButton?.status = ApartmentSubmitButtonStatus.Failed
-
+            if newApartment?.mediaState == ApartmentMediaState.Ready {
+                submitButtonCell?.state = ApartmentMediaState.Loading
+                newApartment.submit({(res: NSDictionary) in
+    
+                    }, fail: {[unowned self] (err: NSError) in
+    
                         let alertController = UIAlertController(title: "Failed", message: "Server Response Error", preferredStyle: .Alert)
-                        
+    
                         let OKAction = UIAlertAction(title: "Retry", style: .Default) { (action) in
-                            submitButton?.status = ApartmentSubmitButtonStatus.ReadyToSubmit
-                        }
-                        if err.code == 1000 {
-                            alertController.message = "Cannot locate the address. Address shoud be in format as \"136 W 109th ST\""
-                        }
-                        else if err.code == 1001 {
-                            alertController.message = "Price, floor, number of rooms should be NUMBERS(1,2,3) only, no LETTERS(A,B,C)"
+                            self.submitButtonCell?.state = .Ready
+                            self.submitButtonCell?.setSelected(false, animated: true)
                         }
                         alertController.addAction(OKAction)
                         
@@ -167,11 +197,12 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDe
                             
                         }
                 })
-
+                
             }
-            
+
         }
     }
+
     // helper functions
     func getThumbnailFrom(originalImage: UIImage) -> UIImage {
         let size = CGSize(width: 80, height: 80)
@@ -212,16 +243,10 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDe
                 if let index = self.indexOfUploadRequest(self.uploadRequests, uploadRequest: uploadRequest) {
                     
                     let indexPath = NSIndexPath(forRow: index, inSection: 0)
-                    self.apartment.imageUrls[index] = "https://d1mnrj0eye9ccu.cloudfront.net/\(uploadRequest.key)"
-
+                    self.newApartment.imageUrls[index] = "https://d1mnrj0eye9ccu.cloudfront.net/\(uploadRequest.key)"
+                    
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-
-                        if self.apartment.isComplete {
-                            self.submitButton?.status = ApartmentSubmitButtonStatus.ReadyToSubmit
-                        }
-                        else {
-                            self.submitButton?.status = ApartmentSubmitButtonStatus.Incomplete
-                        }
+                        self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: UITableViewRowAnimation.Fade)
                         self.collectionView?.reloadItemsAtIndexPaths([indexPath])
                     })
                 }
@@ -237,54 +262,12 @@ class AddApartmentTableViewController: UITableViewController, UICollectionViewDe
         }
         return nil
     }
-    
-    // observers for fields
-    func textFieldsDidChange(sender: UITextField) {
-        let tag = sender.tag
-
-        // additional information
-        if tag > 100 {
-            if tag == 101 {
-                apartment.additionalInfo1 = sender.text
-
-            }
-            else if tag == 102 {
-                apartment.additionalInfo2 = sender.text
-
-            }
-        }
-        else {
-            apartment.setBasicInformationAtIndex(tag, value: sender.text)
-        }
-        
-        if apartment.isComplete {
-            submitButton?.status = ApartmentSubmitButtonStatus.ReadyToSubmit
-        }
-        else {
-            submitButton?.status = ApartmentSubmitButtonStatus.Incomplete
-        }
-    }
-    
-    func dateDidChange(sender: UIDatePicker) {
-        apartment.moveinDate = sender.date
-    }
-    func switchDidChange(sender: UISwitch) {
-        let tag = sender.tag
-        if tag / 100 == 1 {
-            apartment.setApartmentAmenitiesAtIndex(tag - 100, value: sender.on)
-        }
-        else if tag / 100 == 2 {
-            apartment.setBuildingFacilitiesAtIndex(tag - 200, value: sender.on)
-
-        }
-    }
-    
     /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
+        // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
     }
     */

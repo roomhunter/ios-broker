@@ -8,23 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		B4EE72B7243BFF5E7AF73074 /* libPods-Broker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05EDF14D214ADF89D64F8A0E /* libPods-Broker.a */; };
-		BA3B4DF61AFE8F5D00AAB6E8 /* ApartmentFormDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3B4DF51AFE8F5D00AAB6E8 /* ApartmentFormDataSource.swift */; };
+		BA3B4DF81AFF3BFD00AAB6E8 /* ApartmentChecksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3B4DF71AFF3BFD00AAB6E8 /* ApartmentChecksViewController.swift */; };
+		BA3B4DFA1AFF3C6600AAB6E8 /* ApartmentMediaUploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3B4DF91AFF3C6600AAB6E8 /* ApartmentMediaUploadViewController.swift */; };
 		BA41DAE71AFA896300AB9616 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41DAE61AFA896300AB9616 /* AppDelegate.swift */; };
 		BA41DAE91AFA896300AB9616 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41DAE81AFA896300AB9616 /* LoginController.swift */; };
 		BA41DAEE1AFA896300AB9616 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA41DAEC1AFA896300AB9616 /* Main.storyboard */; };
 		BA41DAF01AFA896300AB9616 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BA41DAEF1AFA896300AB9616 /* Images.xcassets */; };
 		BA41DAF31AFA896300AB9616 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA41DAF11AFA896300AB9616 /* LaunchScreen.xib */; };
 		BA41DAFF1AFA896300AB9616 /* agentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41DAFE1AFA896300AB9616 /* agentTests.swift */; };
-		BA41DB0B1AFA8E1A00AB9616 /* AddApartmentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41DB0A1AFA8E1A00AB9616 /* AddApartmentTableViewController.swift */; };
+		BA41DB0B1AFA8E1A00AB9616 /* ApartmentInfomationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41DB0A1AFA8E1A00AB9616 /* ApartmentInfomationTableViewController.swift */; };
 		BA41DB0D1AFA8E5900AB9616 /* ApartmentTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41DB0C1AFA8E5900AB9616 /* ApartmentTextCell.swift */; };
 		BA41DB0F1AFA8E9200AB9616 /* ApartmentSwitchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41DB0E1AFA8E9200AB9616 /* ApartmentSwitchCell.swift */; };
 		BA41DB111AFA9ADE00AB9616 /* ApartmentDateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41DB101AFA9ADE00AB9616 /* ApartmentDateCell.swift */; };
-		BA41DB131AFA9AF600AB9616 /* ApartmentImagesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41DB121AFA9AF600AB9616 /* ApartmentImagesCell.swift */; };
+		BA41DB131AFA9AF600AB9616 /* ApartmentUploadingImagesCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41DB121AFA9AF600AB9616 /* ApartmentUploadingImagesCollectionCell.swift */; };
 		BA41DB151AFB296500AB9616 /* UploadingImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41DB141AFB296500AB9616 /* UploadingImageCell.swift */; };
 		BA41DB1A1AFB648B00AB9616 /* AddImageButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41DB191AFB648B00AB9616 /* AddImageButtonCell.swift */; };
 		BA41DB1C1AFBEF9F00AB9616 /* ApartmentSubmitButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41DB1B1AFBEF9F00AB9616 /* ApartmentSubmitButtonCell.swift */; };
 		BA41DB211AFC0A4000AB9616 /* APIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41DB201AFC0A4000AB9616 /* APIModel.swift */; };
 		BA41DB231AFC25D300AB9616 /* BrokerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41DB221AFC25D300AB9616 /* BrokerModel.swift */; };
+		BA4AF84D1AFFFC67008266F3 /* ApartmentToAmenitiesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4AF84C1AFFFC67008266F3 /* ApartmentToAmenitiesCell.swift */; };
+		BA4AF84F1B001107008266F3 /* ApartmentAddressControlCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4AF84E1B001107008266F3 /* ApartmentAddressControlCell.swift */; };
 		BAB6D4C41AFC471C005DBDFE /* ApartmentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB6D4C31AFC471C005DBDFE /* ApartmentModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -42,7 +45,8 @@
 		05EDF14D214ADF89D64F8A0E /* libPods-Broker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Broker.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		776FAC8B4FDD6D3CA72E743B /* Pods-Broker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Broker.release.xcconfig"; path = "Pods/Target Support Files/Pods-Broker/Pods-Broker.release.xcconfig"; sourceTree = "<group>"; };
 		BA3B4DF41AFE8BBD00AAB6E8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		BA3B4DF51AFE8F5D00AAB6E8 /* ApartmentFormDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentFormDataSource.swift; path = Controllers/ApartmentFormDataSource.swift; sourceTree = "<group>"; };
+		BA3B4DF71AFF3BFD00AAB6E8 /* ApartmentChecksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentChecksViewController.swift; path = Controllers/ApartmentChecksViewController.swift; sourceTree = "<group>"; };
+		BA3B4DF91AFF3C6600AAB6E8 /* ApartmentMediaUploadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentMediaUploadViewController.swift; path = Controllers/ApartmentMediaUploadViewController.swift; sourceTree = "<group>"; };
 		BA41DAE11AFA896300AB9616 /* Broker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Broker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA41DAE51AFA896300AB9616 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BA41DAE61AFA896300AB9616 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -53,17 +57,19 @@
 		BA41DAF81AFA896300AB9616 /* BrokerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BrokerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA41DAFD1AFA896300AB9616 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BA41DAFE1AFA896300AB9616 /* agentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = agentTests.swift; sourceTree = "<group>"; };
-		BA41DB0A1AFA8E1A00AB9616 /* AddApartmentTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddApartmentTableViewController.swift; path = Controllers/AddApartmentTableViewController.swift; sourceTree = "<group>"; };
+		BA41DB0A1AFA8E1A00AB9616 /* ApartmentInfomationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentInfomationTableViewController.swift; path = Controllers/ApartmentInfomationTableViewController.swift; sourceTree = "<group>"; };
 		BA41DB0C1AFA8E5900AB9616 /* ApartmentTextCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentTextCell.swift; path = Views/ApartmentTextCell.swift; sourceTree = "<group>"; };
 		BA41DB0E1AFA8E9200AB9616 /* ApartmentSwitchCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentSwitchCell.swift; path = Views/ApartmentSwitchCell.swift; sourceTree = "<group>"; };
 		BA41DB101AFA9ADE00AB9616 /* ApartmentDateCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentDateCell.swift; path = Views/ApartmentDateCell.swift; sourceTree = "<group>"; };
-		BA41DB121AFA9AF600AB9616 /* ApartmentImagesCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentImagesCell.swift; path = Views/ApartmentImagesCell.swift; sourceTree = "<group>"; };
+		BA41DB121AFA9AF600AB9616 /* ApartmentUploadingImagesCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentUploadingImagesCollectionCell.swift; path = Views/ApartmentUploadingImagesCollectionCell.swift; sourceTree = "<group>"; };
 		BA41DB141AFB296500AB9616 /* UploadingImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UploadingImageCell.swift; path = Views/UploadingImageCell.swift; sourceTree = "<group>"; };
 		BA41DB161AFB3FB800AB9616 /* bridging-header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "bridging-header.h"; sourceTree = "<group>"; };
 		BA41DB191AFB648B00AB9616 /* AddImageButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddImageButtonCell.swift; path = Views/AddImageButtonCell.swift; sourceTree = "<group>"; };
 		BA41DB1B1AFBEF9F00AB9616 /* ApartmentSubmitButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentSubmitButtonCell.swift; path = Views/ApartmentSubmitButtonCell.swift; sourceTree = "<group>"; };
 		BA41DB201AFC0A4000AB9616 /* APIModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = APIModel.swift; path = Models/APIModel.swift; sourceTree = "<group>"; };
 		BA41DB221AFC25D300AB9616 /* BrokerModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BrokerModel.swift; path = Models/BrokerModel.swift; sourceTree = "<group>"; };
+		BA4AF84C1AFFFC67008266F3 /* ApartmentToAmenitiesCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentToAmenitiesCell.swift; path = Views/ApartmentToAmenitiesCell.swift; sourceTree = "<group>"; };
+		BA4AF84E1B001107008266F3 /* ApartmentAddressControlCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentAddressControlCell.swift; path = Views/ApartmentAddressControlCell.swift; sourceTree = "<group>"; };
 		BAB6D4C31AFC471C005DBDFE /* ApartmentModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentModel.swift; path = Models/ApartmentModel.swift; sourceTree = "<group>"; };
 		C54721854C403AAC887A3971 /* Pods-Broker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Broker.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Broker/Pods-Broker.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -182,7 +188,9 @@
 				BA41DB191AFB648B00AB9616 /* AddImageButtonCell.swift */,
 				BA41DB0C1AFA8E5900AB9616 /* ApartmentTextCell.swift */,
 				BA41DB101AFA9ADE00AB9616 /* ApartmentDateCell.swift */,
-				BA41DB121AFA9AF600AB9616 /* ApartmentImagesCell.swift */,
+				BA4AF84E1B001107008266F3 /* ApartmentAddressControlCell.swift */,
+				BA4AF84C1AFFFC67008266F3 /* ApartmentToAmenitiesCell.swift */,
+				BA41DB121AFA9AF600AB9616 /* ApartmentUploadingImagesCollectionCell.swift */,
 				BA41DB1B1AFBEF9F00AB9616 /* ApartmentSubmitButtonCell.swift */,
 				BA41DB141AFB296500AB9616 /* UploadingImageCell.swift */,
 				BA41DB0E1AFA8E9200AB9616 /* ApartmentSwitchCell.swift */,
@@ -194,8 +202,9 @@
 			isa = PBXGroup;
 			children = (
 				BA41DAE81AFA896300AB9616 /* LoginController.swift */,
-				BA41DB0A1AFA8E1A00AB9616 /* AddApartmentTableViewController.swift */,
-				BA3B4DF51AFE8F5D00AAB6E8 /* ApartmentFormDataSource.swift */,
+				BA41DB0A1AFA8E1A00AB9616 /* ApartmentInfomationTableViewController.swift */,
+				BA3B4DF71AFF3BFD00AAB6E8 /* ApartmentChecksViewController.swift */,
+				BA3B4DF91AFF3C6600AAB6E8 /* ApartmentMediaUploadViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -251,6 +260,7 @@
 				TargetAttributes = {
 					BA41DAE01AFA896300AB9616 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = PGY23GA846;
 					};
 					BA41DAF71AFA896300AB9616 = {
 						CreatedOnToolsVersion = 6.3.1;
@@ -338,17 +348,20 @@
 				BA41DB111AFA9ADE00AB9616 /* ApartmentDateCell.swift in Sources */,
 				BA41DB1C1AFBEF9F00AB9616 /* ApartmentSubmitButtonCell.swift in Sources */,
 				BA41DB231AFC25D300AB9616 /* BrokerModel.swift in Sources */,
+				BA4AF84F1B001107008266F3 /* ApartmentAddressControlCell.swift in Sources */,
+				BA3B4DFA1AFF3C6600AAB6E8 /* ApartmentMediaUploadViewController.swift in Sources */,
 				BA41DB1A1AFB648B00AB9616 /* AddImageButtonCell.swift in Sources */,
-				BA41DB0B1AFA8E1A00AB9616 /* AddApartmentTableViewController.swift in Sources */,
+				BA41DB0B1AFA8E1A00AB9616 /* ApartmentInfomationTableViewController.swift in Sources */,
 				BA41DB211AFC0A4000AB9616 /* APIModel.swift in Sources */,
 				BA41DB0D1AFA8E5900AB9616 /* ApartmentTextCell.swift in Sources */,
 				BA41DB151AFB296500AB9616 /* UploadingImageCell.swift in Sources */,
 				BA41DAE71AFA896300AB9616 /* AppDelegate.swift in Sources */,
 				BAB6D4C41AFC471C005DBDFE /* ApartmentModel.swift in Sources */,
 				BA41DB0F1AFA8E9200AB9616 /* ApartmentSwitchCell.swift in Sources */,
-				BA3B4DF61AFE8F5D00AAB6E8 /* ApartmentFormDataSource.swift in Sources */,
-				BA41DB131AFA9AF600AB9616 /* ApartmentImagesCell.swift in Sources */,
+				BA3B4DF81AFF3BFD00AAB6E8 /* ApartmentChecksViewController.swift in Sources */,
+				BA41DB131AFA9AF600AB9616 /* ApartmentUploadingImagesCollectionCell.swift in Sources */,
 				BA41DAE91AFA896300AB9616 /* LoginController.swift in Sources */,
+				BA4AF84D1AFFFC67008266F3 /* ApartmentToAmenitiesCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,6 +489,7 @@
 			baseConfigurationReference = C54721854C403AAC887A3971 /* Pods-Broker.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Broker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -489,6 +503,7 @@
 			baseConfigurationReference = 776FAC8B4FDD6D3CA72E743B /* Pods-Broker.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Broker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

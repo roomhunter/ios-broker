@@ -9,20 +9,42 @@
 import Foundation
 import CoreLocation
 
+enum ApartmentAddressInputMode: Int {
+    case Manually
+    case Auto
+}
+
+enum ApartmentInformationState: Int {
+    case AddressIncorrect
+    case Incomplete
+    case ShouldBeNumbers
+    case Ready
+}
+
+enum ApartmentMediaState: Int {
+    case NotEnough
+    case TooMany
+    case Ready
+    case Loading
+}
+
 class ApartmentModel {
     
-    static let basicInformationArray = ["Address", "Description", "Total Price", "Order Price", "Broker Fee", "How Many Bedrooms", "How Many Bathrooms", "How Many Living Rooms", "Which Floor", "Application Fee"]
+    static let basicInformationArray = ["Description", "Total Price", "Order Price", "Broker Fee", "How Many Bedrooms", "How Many Bathrooms", "How Many Living Rooms", "Which Floor", "Application Fee"]
     static let apartmentAmenitiesArray = ["Electricity Fee Included", "Water Fee Included", "Gas Fee Included", "Dish Washer", "Microwave", "Oven", "Air Conditioner", "Washing Machine", "Dryer", "Heater", "Furniture"]
     static let buildingFacilitiesArray = ["Doorman", "Gym", "Laundry Room", "Elevator", "Swimming Pool", "Parking"]
+    static let additionalInfoArray = ["Additional Info for room amenities", "Additional Info for building facilities"]
     
     let dateFormatter = NSDateFormatter()
 
     var basicInformationDict = [String: String]()
     var apartmentAmenitiesDict = [String: Bool]()
     var buildingFacilitiesDict = [String: Bool]()
-
-    var additionalInfo1 = ""
-    var additionalInfo2 = ""
+    var additionalInfoDict = [String: String]()
+    
+    var addressLine1: String?
+    var apartmentNumberString: String?
+    var cityCountryString: String = "New York"
     
     var imageUrls = [String?]()
     var moveinDate = NSDate()
@@ -31,34 +53,30 @@ class ApartmentModel {
     let api = APIModel.sharedInstance
     let geoCoder = CLGeocoder()
     
-    var requestData: NSDictionary? {
+    var moveinDateString: String {
+        return dateFormatter.stringFromDate(moveinDate)
+    }
+    var requestData: NSDictionary {
         var dict = NSMutableDictionary()
-        let totalPrice = basicInformationDict["Total Price"]?.toInt()
-        let orderPrice = basicInformationDict["Order Price"]?.toInt()
-        let brokerFee = basicInformationDict["Broker Fee"]?.toInt()
-        let bedrooms = basicInformationDict["How Many Bedrooms"]?.toInt()
-        let bathrooms = basicInformationDict["How Many Bathrooms"]?.toInt()
-        let livingrooms = basicInformationDict["How Many Living Rooms"]?.toInt()
-        let floor = basicInformationDict["Which Floor"]?.toInt()
-        let applicationFee = basicInformationDict["Broker Fee"]?.toInt()
+        dict["totalPrice"] = basicInformationDict["Total Price"]!.toInt()
+        dict["orderPrice"] = basicInformationDict["Order Price"]!.toInt()
         
-        if totalPrice == nil || orderPrice == nil || brokerFee == nil || bedrooms == nil || bathrooms == nil || livingrooms == nil || floor == nil || applicationFee == nil {
-            return nil
+        if let numberString = apartmentNumberString?.stringByReplacingOccurrencesOfString("apt", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil) {
+            dict["addressDescription"] = "\(addressLine1!), Apt \(numberString)"
         }
-        
-        dict["totalPrice"] = totalPrice!
-        dict["orderPrice"] = orderPrice!
-        dict["addressDescription"] = basicInformationDict["Address"]
-        dict["city"] = "New York, NY, United States"
+        else {
+            dict["addressDescription"] = addressLine1!
+        }
+        dict["city"] = cityCountryString
         dict["gist"] = basicInformationDict["Description"]
         dict["elevator"] = buildingFacilitiesDict["Elevator"]
-        dict["brokerFee"] = brokerFee!
-        dict["beds"] = bedrooms!
-        dict["bath"] = bathrooms!
-        dict["livingroom"] = livingrooms!
-        dict["floor"] = floor!
+        dict["brokerFee"] = basicInformationDict["Broker Fee"]!.toInt()
+        dict["beds"] = basicInformationDict["How Many Bedrooms"]!.toInt()
+        dict["bath"] = basicInformationDict["How Many Bathrooms"]!.toInt()
+        dict["livingroom"] = basicInformationDict["How Many Living Rooms"]!.toInt()
+        dict["floor"] = basicInformationDict["Which Floor"]!.toInt()
         dict["images"] = convertImages(imageUrls)
-        dict["applicationFee"] = applicationFee!
+        dict["applicationFee"] = basicInformationDict["Broker Fee"]!.toInt()!
         dict["moveinDate"] = dateFormatter.stringFromDate(moveinDate)
         dict["waterelecIncluded"] = apartmentAmenitiesDict["Water Fee Included"]
         dict["dishwasher"] = apartmentAmenitiesDict["Dish Washer"]
@@ -76,8 +94,8 @@ class ApartmentModel {
         dict["gym"] = buildingFacilitiesDict["Gym"]
         dict["swimmingpool"] = buildingFacilitiesDict["Swimming Pool"]
         dict["parking"] = buildingFacilitiesDict["Parking"]
-        dict["additionalInfo1"] = additionalInfo1
-        dict["additionalInfo2"] = additionalInfo2
+        dict["additionalInfo1"] = additionalInfoDict[ApartmentModel.additionalInfoArray[0]]
+        dict["additionalInfo2"] = additionalInfoDict[ApartmentModel.additionalInfoArray[1]]
         dict["coordinates"] = coordinate
 //        dict["qrcode"] =
 //        dict["videos"] = 
@@ -88,27 +106,54 @@ class ApartmentModel {
     }
     
     
-    var isComplete: Bool {
-        // at least 8 images
-        if imageUrls.count < 8 {
-            return false
-        }
-        for url in imageUrls {
-            if url == nil {
-                return false
-            }
-        }
+    var informationState: ApartmentInformationState {
         // text fileds shoud be filled out
-        for (index, value) in basicInformationDict {
-            if value.isEmpty {
-                return false
-            }
+        if addressLine1 == nil {
+            return .AddressIncorrect
         }
         
-        return true
+        for (index, value) in basicInformationDict {
+            if value.isEmpty {
+                return .Incomplete
+            }
+        }
+
+        // check numbers
+        let totalPrice = basicInformationDict["Total Price"]?.toInt()
+        let orderPrice = basicInformationDict["Order Price"]?.toInt()
+        let brokerFee = basicInformationDict["Broker Fee"]?.toInt()
+        let bedrooms = basicInformationDict["How Many Bedrooms"]?.toInt()
+        let bathrooms = basicInformationDict["How Many Bathrooms"]?.toInt()
+        let livingrooms = basicInformationDict["How Many Living Rooms"]?.toInt()
+        let floor = basicInformationDict["Which Floor"]?.toInt()
+        let applicationFee = basicInformationDict["Broker Fee"]?.toInt()
+        
+        if totalPrice == nil || orderPrice == nil || brokerFee == nil || bedrooms == nil || bathrooms == nil || livingrooms == nil || floor == nil || applicationFee == nil {
+            return .ShouldBeNumbers
+        }
+        
+        return .Ready
     }
+    
+    var mediaState: ApartmentMediaState {
+        // at least 8 images
+
+        if imageUrls.count < 8 {
+            return .NotEnough
+        }
+//        else if imageUrls.count > 16 {
+//            return .TooMany
+//        }
+        for url in imageUrls {
+            if url == nil {
+                return .NotEnough
+            }
+        }
+        return .Ready
+    }
+    
     init() {
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+        dateFormatter.dateFormat = "yyyy-MM-dd"
 
         for item in ApartmentModel.basicInformationArray {
             basicInformationDict[item] = ""
@@ -119,30 +164,32 @@ class ApartmentModel {
         for item in ApartmentModel.buildingFacilitiesArray {
             buildingFacilitiesDict[item] = false
         }
+        for item in ApartmentModel.additionalInfoArray {
+            additionalInfoDict[item] = ""
+        }
+    }
+    
+    func convertAddressString(addressString: String, success: (Void -> Void)?) {
+        geoCoder.geocodeAddressString("\(addressString), New York", completionHandler: {
+            (placemarks: [AnyObject]!, error: NSError!) -> Void in
+            if error != nil {
+                return
+            }
+            if let placemark = placemarks[0] as? CLPlacemark {
+                let location = placemark.location
+                let coordinate2D = location.coordinate
+                self.cityCountryString = "\(placemark.subAdministrativeArea), \(placemark.administrativeArea) \(placemark.postalCode), \(placemark.ISOcountryCode)"
+                self.coordinate = [coordinate2D.latitude, coordinate2D.longitude]
+                self.addressLine1 = addressString
+                success?()
+            }
+        })
     }
     
     func submit(success: NSDictionary -> Void, fail: NSError -> Void) {
-        let address = basicInformationDict["Address"]!
-        geoCoder.geocodeAddressString("\(address), New York", completionHandler: {
-            (placemarks: [AnyObject]!, error: NSError!) -> Void in
-            if error != nil {
-                return fail(NSError(domain: "coordinate retreive", code: 1000, userInfo: nil))
-            }
-            if let placemark = placemarks[0] as? CLPlacemark {
-                let location = placemark.location.coordinate
-                self.coordinate = [location.latitude, location.longitude]
-                if let data = self.requestData {
-                    self.api.addApartment(data, success: success, fail: fail)
-                }
-                else {
-                    fail(NSError(domain: "number conversion", code: 1001, userInfo: nil))
-                }
-            }
-            else {
-                fail(NSError(domain: "coordinate retreive", code: 1000, userInfo: nil))
-
-            }
-        })
+        let data = requestData
+        println(data)
+        self.api.addApartment(data, success: success, fail: fail)
     }
     
     func convertImages(images: [String?]) -> [String] {
@@ -151,41 +198,5 @@ class ApartmentModel {
             urls.append(url!)
         }
         return urls
-    }
-    func getBasicInformationAtIndex(index: Int) -> String {
-        if index < 0 || index >= ApartmentModel.basicInformationArray.count {
-            return ""
-        }
-        return basicInformationDict[ApartmentModel.basicInformationArray[index]]!
-    }
-    func getApartmentAmenitiesAtIndex(index: Int) -> Bool {
-        if index < 0 || index >= ApartmentModel.apartmentAmenitiesArray.count {
-            return false
-        }
-        return apartmentAmenitiesDict[ApartmentModel.apartmentAmenitiesArray[index]]!
-    }
-    func getBuildingFacilitiesAtIndex(index: Int) -> Bool {
-        if index < 0 || index >= ApartmentModel.buildingFacilitiesArray.count {
-            return false
-        }
-        return buildingFacilitiesDict[ApartmentModel.buildingFacilitiesArray[index]]!
-    }
-    func setBasicInformationAtIndex(index: Int, value: String) {
-        if index < 0 || index >= ApartmentModel.basicInformationArray.count {
-            return
-        }
-        basicInformationDict[ApartmentModel.basicInformationArray[index]] = value
-    }
-    func setApartmentAmenitiesAtIndex(index: Int, value: Bool) {
-        if index < 0 || index >= ApartmentModel.apartmentAmenitiesArray.count {
-            return
-        }
-        apartmentAmenitiesDict[ApartmentModel.apartmentAmenitiesArray[index]] = value
-    }
-    func setBuildingFacilitiesAtIndex(index: Int, value: Bool) {
-        if index < 0 || index >= ApartmentModel.buildingFacilitiesArray.count {
-            return
-        }
-        buildingFacilitiesDict[ApartmentModel.buildingFacilitiesArray[index]] = value
     }
 }

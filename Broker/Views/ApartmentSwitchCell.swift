@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol ApartmentSwitchCellDelegate {
+    func switchDidChange(key: String, value: Bool, tag: Int)
+}
+
 class ApartmentSwitchCell: UITableViewCell {
 
     @IBOutlet var itemLabel: UILabel!
@@ -15,18 +19,28 @@ class ApartmentSwitchCell: UITableViewCell {
     @IBOutlet var itemSwitch: UISwitch!
     @IBAction func itemSwitchChanges(sender: UISwitch) {
         on = sender.on
+        if key != nil {
+            delegate?.switchDidChange(key!, value: sender.on, tag:tag)
+        }
     }
-    var on = false {
+    var key: String? {
+        didSet {
+            itemLabel.text = key
+        }
+    }
+    var on: Bool! {
         didSet {
             itemSwitch.on = on
-            if on {
-                itemSwitchResult.text = "YES"
+            if on == true {
+                itemSwitchResult.text = "Yes"
             }
             else {
-                itemSwitchResult.text = "NO"
+                itemSwitchResult.text = "No"
             }
         }
     }
+    var delegate: ApartmentSwitchCellDelegate?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ApartmentImagesCell: UITableViewCell {
+class ApartmentUploadingImagesCollectionCell: UITableViewCell {
 
     @IBOutlet var imagesCollectionView: UICollectionView!
     override func awakeFromNib() {

@@ -8,27 +8,23 @@
 
 import UIKit
 
-enum ApartmentSubmitButtonStatus: Int {
-    case Incomplete
-    case ReadyToSubmit
-    case Loading
-    case Submitted
-    case Failed
-}
-
 class ApartmentSubmitButtonCell: UITableViewCell {
 
     @IBOutlet var submitLabel: UILabel!
     @IBOutlet var activityIndicator: UIActivityIndicatorView!
     
-    var status = ApartmentSubmitButtonStatus.Incomplete {
+    var state = ApartmentMediaState.NotEnough {
         didSet {
-            switch status {
-            case .Incomplete:
+            switch state {
+            case .NotEnough:
                 submitLabel.textColor = UIColor.lightGrayColor()
-                submitLabel.text = "Please Complete The Form"
+                submitLabel.text = "Please upload at least 8 photos"
                 activityIndicator.stopAnimating()
-            case .ReadyToSubmit:
+            case .TooMany:
+                submitLabel.textColor = UIColor.lightGrayColor()
+                submitLabel.text = "No more than 16 photos"
+                activityIndicator.stopAnimating()
+            case .Ready:
                 submitLabel.textColor = UIColor.orangeColor()
                 submitLabel.text = "Submit"
                 activityIndicator.stopAnimating()
@@ -36,14 +32,6 @@ class ApartmentSubmitButtonCell: UITableViewCell {
                 submitLabel.textColor = UIColor.lightGrayColor()
                 submitLabel.text = "Loading"
                 activityIndicator.startAnimating()
-            case .Submitted:
-                submitLabel.textColor = UIColor.orangeColor()
-                submitLabel.text = "Submitted"
-                activityIndicator.stopAnimating()
-            case .Failed:
-                submitLabel.textColor = UIColor.lightGrayColor()
-                submitLabel.text = "Failed"
-                activityIndicator.stopAnimating()
             }
         }
     }
@@ -51,8 +39,8 @@ class ApartmentSubmitButtonCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         activityIndicator.hidesWhenStopped = true
-        status = ApartmentSubmitButtonStatus.Incomplete
         // Initialization code
+        state = .NotEnough
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
