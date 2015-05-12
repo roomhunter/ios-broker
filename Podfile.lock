@@ -17,6 +17,7 @@ PODS:
   - Bolts/AppLinks (1.1.5):
     - Bolts/Tasks
   - Bolts/Tasks (1.1.5)
+  - CTAssetsPickerController (2.9.3)
   - GZIP (1.0.3)
   - Mantle (1.5.4):
     - Mantle/extobjc (= 1.5.4)
@@ -28,11 +29,13 @@ PODS:
 
 DEPENDENCIES:
   - AWSS3 (~> 2.1.0)
+  - CTAssetsPickerController (~> 2.9.0)
 
 SPEC CHECKSUMS:
   AWSCore: 0e82eabc27a96d765b1e2ad4d30b96c1cd298300
   AWSS3: 891d269735be0f3c63eab5a2d1ee9d788f2c64ee
   Bolts: aac24961496d504aa56fc267cde95162a71bac39
+  CTAssetsPickerController: 56a4a228dcb48a9375ab8d4922e82ac74af74aa1
   GZIP: f0863fda354e8f83316508c0a2c7bbe385e39129
   Mantle: 60acd0cd363e27d945bda0a6b8e90577112d28f3
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96

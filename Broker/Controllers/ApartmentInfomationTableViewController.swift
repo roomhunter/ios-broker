@@ -71,7 +71,7 @@ class ApartmentInfomationTableViewController: UITableViewController, ApartmentTe
             return cell
         case 2:
             let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentDateCell", forIndexPath: indexPath) as! ApartmentDateCell
-            cell.moveinDate = self.newApartment.moveinDate
+            cell.datePicker.date = self.newApartment.moveinDate
             cell.delegate = self
             return cell
         case 3:
@@ -145,6 +145,8 @@ class ApartmentInfomationTableViewController: UITableViewController, ApartmentTe
     
     func didEndEditingOf(key: String, value: String) {
         newApartment.basicInformationDict[key] = value
+        let lastRow = NSIndexPath(forRow: 0, inSection: 3)
+        self.tableView.reloadRowsAtIndexPaths([lastRow], withRowAnimation: UITableViewRowAnimation.Fade)
     }
     
     func didChangeDate(date: NSDate) {

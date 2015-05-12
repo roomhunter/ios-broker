@@ -23,14 +23,15 @@
       "scale" : "3x"
     },
     {
-      "idiom" : "iphone",
       "size" : "60x60",
+      "idiom" : "iphone",
+      "filename" : "RoomHunter-120.png",
       "scale" : "2x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "RoomHunter-25-2.png",
+      "filename" : "RoomHunter-180.png",
       "scale" : "3x"
     }
   ],

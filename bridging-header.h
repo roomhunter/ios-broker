@@ -10,5 +10,6 @@
 #define broker_bridging_header_h
 
 #import <AWSS3/AWSS3.h>
+#import <CTAssetsPickerController.h>
 
 #endif

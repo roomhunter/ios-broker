@@ -8,13 +8,15 @@
 
 import UIKit
 
-class ApartmentMediaUploadViewController: UITableViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ApartmentMediaUploadViewController: UITableViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, CTAssetsPickerControllerDelegate, UINavigationControllerDelegate {
     
     let imagesActionSheet = UIActionSheet(title: "Image From", delegate: nil, cancelButtonTitle: "Cancel", destructiveButtonTitle: "From Library")
     
     let imagesPicker = UIImagePickerController()
+    let multipleImagesPicker = CTAssetsPickerController()
     var collectionView: UICollectionView?
     var submitButtonCell: ApartmentSubmitButtonCell?
+    // risk: upload requests != upload images
     var uploadRequests = [AWSS3TransferManagerUploadRequest?]()
     var imageThumbnails = [UIImage]()
     
@@ -29,6 +31,9 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
             imagesActionSheet.addButtonWithTitle("Take Photo")
         }
         imagesPicker.delegate = self
+        
+        multipleImagesPicker.delegate = self
+        multipleImagesPicker.assetsFilter = ALAssetsFilter.allPhotos()
         var error = NSErrorPointer()
         
         if !NSFileManager.defaultManager().createDirectoryAtPath(
@@ -89,8 +94,9 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
     func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
         switch buttonIndex {
         case 0: // from library
-            imagesPicker.sourceType = UIImagePickerControllerSourceType.SavedPhotosAlbum
-            self.presentViewController(imagesPicker, animated: true, completion: nil)
+            self.presentViewController(multipleImagesPicker, animated: true, completion: nil)
+//            imagesPicker.sourceType = UIImagePickerControllerSourceType.SavedPhotosAlbum
+//            self.presentViewController(imagesPicker, animated: true, completion: nil)
         case 2: // form camera
             if buttonIndex != actionSheet.cancelButtonIndex {
                 imagesPicker.sourceType = UIImagePickerControllerSourceType.Camera
@@ -119,23 +125,58 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
             
             self.uploadRequests.append(uploadRequest)
             self.newApartment?.imageUrls.append(nil)
-            
-            self.upload(uploadRequest)
-            dispatch_async(dispatch_get_main_queue(), { [unowned self] in
-                self.collectionView?.reloadData()
+            dispatch_async(dispatch_get_main_queue(), {
+                let items = self.collectionView!.numberOfItemsInSection(0)
+                self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: items - 1, inSection: 0)])
+                // upload method must be called before items insertion, otherwize, it is possible that upload is finished and it reload the item before insertion
+                self.upload(uploadRequest)
+                
                 })
             })
-        
     }
     
+    func assetsPickerController(picker: CTAssetsPickerController!, didFinishPickingAssets assets: [AnyObject]!) {
+        picker.dismissViewControllerAnimated(true, completion: nil)
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), { [unowned self] in
+
+            for asset in assets {
+                let representation = (asset as! ALAsset).defaultRepresentation()
+                let fullImage = UIImage(CGImage: representation.fullResolutionImage().takeUnretainedValue())
+            
+                self.imageThumbnails.append(self.getThumbnailFrom(fullImage!))
+                let fileName = NSProcessInfo.processInfo().globallyUniqueString.stringByAppendingString(".jpeg")
+                
+                let uploadRequest = AWSS3TransferManagerUploadRequest()
+                uploadRequest.body = NSURL(fileURLWithPath: self.getCompressedImageUrlFrom(fullImage!))
+                uploadRequest.key = "apartments/\(fileName)"
+                uploadRequest.bucket = "roomhunter-static"
+                uploadRequest.contentType = "image/jpeg"
+                uploadRequest.ACL = AWSS3ObjectCannedACL.PublicRead
+                
+                self.uploadRequests.append(uploadRequest)
+                self.newApartment.imageUrls.append(nil)
+                dispatch_async(dispatch_get_main_queue(), {
+                    let items = self.collectionView!.numberOfItemsInSection(0)
+                    self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: items - 1, inSection: 0)])
+                    // upload method must be called before items insertion, otherwize, it is possible that upload is finished and it reload the item before insertion
+                    self.upload(uploadRequest)
+
+                })
+            }
+            dispatch_async(dispatch_get_main_queue(), { [unowned self] in
+                self.multipleImagesPicker.selectedAssets = []
+            })
+        })
+    }
+
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return imageThumbnails.count + 1
+        return uploadRequests.count + 1
     }
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("UploadingImageCell", forIndexPath: indexPath) as! UploadingImageCell
         let row = indexPath.row
         
-        if row == imageThumbnails.count {
+        if row == uploadRequests.count {
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier("AddImageButtonCell", forIndexPath: indexPath) as! UICollectionViewCell
             return cell
         }
@@ -145,6 +186,12 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
         if let uploadRequest = uploadRequests[row] {
             switch uploadRequest.state {
             case .Running:
+                break
+                
+            case .Completed:
+                cell.progress = 1.0
+            case .NotStarted:
+                cell.progress = 0.0
                 // upload progress
                 uploadRequest.uploadProgress = { (bytesSent, totalBytesSent, totalBytesExpectedToSend) -> Void in
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -153,9 +200,6 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
                         }
                     })
                 }
-                
-            case .Completed:
-                cell.progress = 1.0
                 
             default:
                 cell.imageView.image = nil
@@ -241,7 +285,6 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
             // finished
             if task.result != nil {
                 if let index = self.indexOfUploadRequest(self.uploadRequests, uploadRequest: uploadRequest) {
-                    
                     let indexPath = NSIndexPath(forRow: index, inSection: 0)
                     self.newApartment.imageUrls[index] = "https://d1mnrj0eye9ccu.cloudfront.net/\(uploadRequest.key)"
                     

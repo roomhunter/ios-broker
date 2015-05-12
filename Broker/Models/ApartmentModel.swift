@@ -30,7 +30,7 @@ enum ApartmentMediaState: Int {
 
 class ApartmentModel {
     
-    static let basicInformationArray = ["Description", "Total Price", "Order Price", "Broker Fee", "How Many Bedrooms", "How Many Bathrooms", "How Many Living Rooms", "Which Floor", "Application Fee"]
+    static let basicInformationArray = ["Description", "Total Price", "Order Price", "Broker Fee (%)", "How Many Bedrooms", "How Many Bathrooms", "How Many Living Rooms", "Which Floor", "Application Fee"]
     static let apartmentAmenitiesArray = ["Electricity Fee Included", "Water Fee Included", "Gas Fee Included", "Dish Washer", "Microwave", "Oven", "Air Conditioner", "Washing Machine", "Dryer", "Heater", "Furniture"]
     static let buildingFacilitiesArray = ["Doorman", "Gym", "Laundry Room", "Elevator", "Swimming Pool", "Parking"]
     static let additionalInfoArray = ["Additional Info for room amenities", "Additional Info for building facilities"]
@@ -70,13 +70,13 @@ class ApartmentModel {
         dict["city"] = cityCountryString
         dict["gist"] = basicInformationDict["Description"]
         dict["elevator"] = buildingFacilitiesDict["Elevator"]
-        dict["brokerFee"] = basicInformationDict["Broker Fee"]!.toInt()
+        dict["brokerFee"] = basicInformationDict["Broker Fee (%)"]!.toInt()
         dict["beds"] = basicInformationDict["How Many Bedrooms"]!.toInt()
         dict["bath"] = basicInformationDict["How Many Bathrooms"]!.toInt()
         dict["livingroom"] = basicInformationDict["How Many Living Rooms"]!.toInt()
         dict["floor"] = basicInformationDict["Which Floor"]!.toInt()
         dict["images"] = convertImages(imageUrls)
-        dict["applicationFee"] = basicInformationDict["Broker Fee"]!.toInt()!
+        dict["applicationFee"] = basicInformationDict["Application Fee"]!.toInt()!
         dict["moveinDate"] = dateFormatter.stringFromDate(moveinDate)
         dict["waterelecIncluded"] = apartmentAmenitiesDict["Water Fee Included"]
         dict["dishwasher"] = apartmentAmenitiesDict["Dish Washer"]
@@ -121,12 +121,12 @@ class ApartmentModel {
         // check numbers
         let totalPrice = basicInformationDict["Total Price"]?.toInt()
         let orderPrice = basicInformationDict["Order Price"]?.toInt()
-        let brokerFee = basicInformationDict["Broker Fee"]?.toInt()
+        let brokerFee = basicInformationDict["Broker Fee (%)"]?.toInt()
         let bedrooms = basicInformationDict["How Many Bedrooms"]?.toInt()
         let bathrooms = basicInformationDict["How Many Bathrooms"]?.toInt()
         let livingrooms = basicInformationDict["How Many Living Rooms"]?.toInt()
         let floor = basicInformationDict["Which Floor"]?.toInt()
-        let applicationFee = basicInformationDict["Broker Fee"]?.toInt()
+        let applicationFee = basicInformationDict["Application Fee"]?.toInt()
         
         if totalPrice == nil || orderPrice == nil || brokerFee == nil || bedrooms == nil || bathrooms == nil || livingrooms == nil || floor == nil || applicationFee == nil {
             return .ShouldBeNumbers

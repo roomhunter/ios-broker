@@ -16,15 +16,15 @@ class ApartmentDateCell: UITableViewCell {
 
     @IBOutlet var datePicker: UIDatePicker!
     @IBAction func datePickerChanged(sender: UIDatePicker) {
-        moveinDate = sender.date
+//        moveinDate = sender.date
         delegate?.didChangeDate(sender.date)
     }
     var delegate: ApartmentDateCellDelegate?
-    var moveinDate = NSDate() {
-        didSet {
-            datePicker.date = moveinDate
-        }
-    }
+//    var moveinDate = NSDate() {
+//        didSet {
+//            datePicker.date = moveinDate
+//        }
+//    }
     
     override func awakeFromNib() {
         super.awakeFromNib()

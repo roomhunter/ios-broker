@@ -14,7 +14,11 @@ class UploadingImageCell: UICollectionViewCell {
     @IBOutlet var statusLabel: UILabel!
     var progress: Float = 0.0 {
         didSet {
-            if progress >= 0.0 && progress < 1.0 {
+            if progress == 0.0 {
+                statusLabel.text = "Preparing"
+                progressView.progress = progress
+            }
+            else if progress > 0.0 && progress < 1.0 {
                 statusLabel.text = "Uploading"
                 progressView.progress = progress
             }

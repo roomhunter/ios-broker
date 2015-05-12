@@ -108,7 +108,7 @@
         <scene sceneID="XOJ-iX-Eic">
             <objects>
                 <tableViewController title="Basic Information" id="Q1O-CT-dTM" customClass="ApartmentInfomationTableViewController" customModule="Broker" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="interactive" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="ZJC-FA-LMD">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="ZJC-FA-LMD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
@@ -218,9 +218,6 @@
                                             <date key="minimumDate" timeIntervalSinceReferenceDate="441802800">
                                                 <!--2015-01-01 11:00:00 +0000-->
                                             </date>
-                                            <date key="maximumDate" timeIntervalSinceReferenceDate="504874800">
-                                                <!--2016-12-31 11:00:00 +0000-->
-                                            </date>
                                             <locale key="locale" localeIdentifier="en_US_POSIX"/>
                                             <variation key="default">
                                                 <mask key="constraints">
@@ -290,7 +287,7 @@
         <scene sceneID="IMQ-Qs-lxA">
             <objects>
                 <tableViewController id="gqG-ai-X2m" customClass="ApartmentChecksViewController" customModule="Broker" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="interactive" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="lgP-X2-bVx">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="lgP-X2-bVx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
