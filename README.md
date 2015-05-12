@@ -13,6 +13,6 @@ Tasks
     - [ ] work with Yao's server'
 - [x] multiple selection of images
 - [ ] memory leaks of datepicker?
-- [ ] release some memory after pushing to next view?
+- [x] release some memory after pushing to next view?
 - [ ] list uploading history
 

@@ -53,6 +53,9 @@ class ApartmentModel {
     let api = APIModel.sharedInstance
     let geoCoder = CLGeocoder()
     
+    var uploadRequests = [AWSS3TransferManagerUploadRequest?]()
+    var imageThumbnails = [UIImage]()
+    
     var moveinDateString: String {
         return dateFormatter.stringFromDate(moveinDate)
     }

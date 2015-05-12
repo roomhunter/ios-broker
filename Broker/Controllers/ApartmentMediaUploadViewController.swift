@@ -17,8 +17,8 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
     var collectionView: UICollectionView?
     var submitButtonCell: ApartmentSubmitButtonCell?
     // risk: upload requests != upload images
-    var uploadRequests = [AWSS3TransferManagerUploadRequest?]()
-    var imageThumbnails = [UIImage]()
+//    var uploadRequests = [AWSS3TransferManagerUploadRequest?]()
+//    var imageThumbnails = [UIImage]()
     
     var newApartment: ApartmentModel!
 
@@ -113,7 +113,7 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
         
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), { [unowned self] in
             
-            self.imageThumbnails.append(self.getThumbnailFrom(image))
+            self.newApartment.imageThumbnails.append(self.getThumbnailFrom(image))
             let fileName = NSProcessInfo.processInfo().globallyUniqueString.stringByAppendingString(".jpeg")
             
             let uploadRequest = AWSS3TransferManagerUploadRequest()
@@ -123,11 +123,11 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
             uploadRequest.contentType = "image/jpeg"
             uploadRequest.ACL = AWSS3ObjectCannedACL.PublicRead
             
-            self.uploadRequests.append(uploadRequest)
+            self.newApartment.uploadRequests.append(uploadRequest)
             self.newApartment?.imageUrls.append(nil)
             dispatch_async(dispatch_get_main_queue(), {
-                let items = self.collectionView!.numberOfItemsInSection(0)
-                self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: items - 1, inSection: 0)])
+                let items = self.newApartment.uploadRequests.count - 1
+                self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: items, inSection: 0)])
                 // upload method must be called before items insertion, otherwize, it is possible that upload is finished and it reload the item before insertion
                 self.upload(uploadRequest)
                 
@@ -143,7 +143,7 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
                 let representation = (asset as! ALAsset).defaultRepresentation()
                 let fullImage = UIImage(CGImage: representation.fullResolutionImage().takeUnretainedValue())
             
-                self.imageThumbnails.append(self.getThumbnailFrom(fullImage!))
+                self.newApartment.imageThumbnails.append(self.getThumbnailFrom(fullImage!))
                 let fileName = NSProcessInfo.processInfo().globallyUniqueString.stringByAppendingString(".jpeg")
                 
                 let uploadRequest = AWSS3TransferManagerUploadRequest()
@@ -153,11 +153,11 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
                 uploadRequest.contentType = "image/jpeg"
                 uploadRequest.ACL = AWSS3ObjectCannedACL.PublicRead
                 
-                self.uploadRequests.append(uploadRequest)
+                self.newApartment.uploadRequests.append(uploadRequest)
                 self.newApartment.imageUrls.append(nil)
                 dispatch_async(dispatch_get_main_queue(), {
-                    let items = self.collectionView!.numberOfItemsInSection(0)
-                    self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: items - 1, inSection: 0)])
+                    let items = self.newApartment.uploadRequests.count - 1
+                    self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: items, inSection: 0)])
                     // upload method must be called before items insertion, otherwize, it is possible that upload is finished and it reload the item before insertion
                     self.upload(uploadRequest)
 
@@ -170,22 +170,29 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
     }
 
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return uploadRequests.count + 1
+        return newApartment.uploadRequests.count + 1
     }
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("UploadingImageCell", forIndexPath: indexPath) as! UploadingImageCell
         let row = indexPath.row
         
-        if row == uploadRequests.count {
+        if row == newApartment.uploadRequests.count {
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier("AddImageButtonCell", forIndexPath: indexPath) as! UICollectionViewCell
             return cell
         }
         
-        cell.imageView.image = imageThumbnails[row]
+        cell.imageView.image = newApartment.imageThumbnails[row]
         
-        if let uploadRequest = uploadRequests[row] {
+        if let uploadRequest = newApartment.uploadRequests[row] {
             switch uploadRequest.state {
             case .Running:
+                uploadRequest.uploadProgress = { (bytesSent, totalBytesSent, totalBytesExpectedToSend) -> Void in
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        if totalBytesExpectedToSend > 0 {
+                            cell.progress = Float(Double(totalBytesSent) / Double(totalBytesExpectedToSend))
+                        }
+                    })
+                }
                 break
                 
             case .Completed:
@@ -284,7 +291,7 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
         transferManager.upload(uploadRequest).continueWithBlock { [unowned self] (task) -> AnyObject! in
             // finished
             if task.result != nil {
-                if let index = self.indexOfUploadRequest(self.uploadRequests, uploadRequest: uploadRequest) {
+                if let index = self.indexOfUploadRequest(self.newApartment.uploadRequests, uploadRequest: uploadRequest) {
                     let indexPath = NSIndexPath(forRow: index, inSection: 0)
                     self.newApartment.imageUrls[index] = "https://d1mnrj0eye9ccu.cloudfront.net/\(uploadRequest.key)"
                     
