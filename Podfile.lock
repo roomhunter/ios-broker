@@ -23,6 +23,9 @@ PODS:
     - Mantle/extobjc (= 1.5.4)
   - Mantle/extobjc (1.5.4)
   - Reachability (3.2)
+  - SDWebImage (3.7.2):
+    - SDWebImage/Core (= 3.7.2)
+  - SDWebImage/Core (3.7.2)
   - TMCache (1.2.4)
   - UICKeyChainStore (2.0.4)
   - XMLDictionary (1.4)
@@ -30,6 +33,7 @@ PODS:
 DEPENDENCIES:
   - AWSS3 (~> 2.1.0)
   - CTAssetsPickerController (~> 2.9.0)
+  - SDWebImage (~> 3.7)
 
 SPEC CHECKSUMS:
   AWSCore: 0e82eabc27a96d765b1e2ad4d30b96c1cd298300
@@ -39,6 +43,7 @@ SPEC CHECKSUMS:
   GZIP: f0863fda354e8f83316508c0a2c7bbe385e39129
   Mantle: 60acd0cd363e27d945bda0a6b8e90577112d28f3
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
   TMCache: a93984b045a5ee84bd8941bd5e0b54296059cc52
   UICKeyChainStore: 69eb0c3a6f669bccf16ba88de3b9069b71501361
   XMLDictionary: f9f51601ba76678b594ab485f2b00ec1fed23724

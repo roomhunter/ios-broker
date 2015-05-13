@@ -16,9 +16,6 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
     let multipleImagesPicker = CTAssetsPickerController()
     var collectionView: UICollectionView?
     var submitButtonCell: ApartmentSubmitButtonCell?
-    // risk: upload requests != upload images
-//    var uploadRequests = [AWSS3TransferManagerUploadRequest?]()
-//    var imageThumbnails = [UIImage]()
     
     var newApartment: ApartmentModel!
 
@@ -31,7 +28,7 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
             imagesActionSheet.addButtonWithTitle("Take Photo")
         }
         imagesPicker.delegate = self
-        
+        imagesPicker.sourceType = .Camera
         multipleImagesPicker.delegate = self
         multipleImagesPicker.assetsFilter = ALAssetsFilter.allPhotos()
         var error = NSErrorPointer()
@@ -95,11 +92,8 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
         switch buttonIndex {
         case 0: // from library
             self.presentViewController(multipleImagesPicker, animated: true, completion: nil)
-//            imagesPicker.sourceType = UIImagePickerControllerSourceType.SavedPhotosAlbum
-//            self.presentViewController(imagesPicker, animated: true, completion: nil)
         case 2: // form camera
             if buttonIndex != actionSheet.cancelButtonIndex {
-                imagesPicker.sourceType = UIImagePickerControllerSourceType.Camera
                 self.presentViewController(imagesPicker, animated: true, completion: nil)
             }
         default:
@@ -154,6 +148,7 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
                 uploadRequest.ACL = AWSS3ObjectCannedACL.PublicRead
         
                 dispatch_async(dispatch_get_main_queue(), {
+                    // thread safe! several methods will access the same item in the collection view
                     self.newApartment.uploadRequests.append(uploadRequest)
                     self.newApartment.imageUrls.append(nil)
                     let items = self.newApartment.uploadRequests.count - 1

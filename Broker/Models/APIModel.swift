@@ -9,34 +9,44 @@ import Foundation
 
 class APIModel {
     var session: NSURLSession
-    let HOST = "http://test.roomhunter.us:3000/v1/"
+    let HOST = "http://test.roomhunter.us:3000/v1"
     
     static let sharedInstance = APIModel()
     
     private init() {
         let sessionConfiguration = NSURLSessionConfiguration.defaultSessionConfiguration()
-//        sessionConfiguration.HTTPAdditionalHeaders = ["referer": googleApiReferer]
+        sessionConfiguration.HTTPAdditionalHeaders = ["Accept": "application/json"]
         session = NSURLSession(configuration: sessionConfiguration)
     }
     
     func loginWith(email: String, password: String, success: NSDictionary -> Void, fail: NSError -> Void) {
         let req = ["password": password, "email": email]
-        post("\(HOST)users/login", data: req , success: success, fail: fail)
+        post("\(HOST)/users/login", data: req , success: success, fail: fail)
     }
     
     func verifyToken(token: String, success: NSDictionary -> Void, fail: NSError -> Void) {
         let req = ["userToken": token]
-        post("\(HOST)users/verify-token", data: req, success: success, fail: fail)
+        post("\(HOST)/users/verify-token", data: req, success: success, fail: fail)
     }
     func addApartment(aptData: NSDictionary, success: NSDictionary -> Void, fail: NSError -> Void) {
         var data = NSMutableDictionary(dictionary: aptData)
         if let token = BrokerModel.sharedInstance.token {
             data["userToken"] = token
         }
-        
-        post("\(HOST)brokers/apartment", data: data, success: success, fail: fail)
+        post("\(HOST)/brokers/apartment", data: data, success: success, fail: fail)
+    }
+    func getApartments(offset: Int, success: NSDictionary -> Void, fail: NSError -> Void) {
+        let token = BrokerModel.sharedInstance.token
+        if token == nil {
+            fail(NSError(domain: "token invalid", code: 401, userInfo: nil))
+            return
+        }
+        let path = "\(HOST)/brokers/apartments?userToken=\(token!)&pageOffset=\(offset)&pageLimit=10"
+        get(path, success: success, fail: fail)
     }
     
+    
+    // low-level requests
     private func get(path: String, success: (NSDictionary -> Void)?, fail: ((NSError) -> Void)? = nil) {
         
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
@@ -80,7 +90,7 @@ class APIModel {
         }
         request.HTTPMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
+//        request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.HTTPBody = bodyData
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
 
