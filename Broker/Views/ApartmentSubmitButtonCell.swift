@@ -20,18 +20,28 @@ class ApartmentSubmitButtonCell: UITableViewCell {
                 submitLabel.textColor = UIColor.lightGrayColor()
                 submitLabel.text = "Please upload at least 8 photos"
                 activityIndicator.stopAnimating()
+                self.userInteractionEnabled = false
             case .TooMany:
                 submitLabel.textColor = UIColor.lightGrayColor()
                 submitLabel.text = "No more than 16 photos"
                 activityIndicator.stopAnimating()
+                self.userInteractionEnabled = false
             case .Ready:
                 submitLabel.textColor = UIColor.orangeColor()
                 submitLabel.text = "Submit"
                 activityIndicator.stopAnimating()
+                self.userInteractionEnabled = true
             case .Loading:
                 submitLabel.textColor = UIColor.lightGrayColor()
                 submitLabel.text = "Loading"
                 activityIndicator.startAnimating()
+                self.setSelected(false, animated: true)
+                self.userInteractionEnabled = false
+            case .Success:
+                submitLabel.textColor = self.tintColor
+                submitLabel.text = "Success, Upload A New One!"
+                activityIndicator.stopAnimating()
+                self.userInteractionEnabled = false
             }
         }
     }

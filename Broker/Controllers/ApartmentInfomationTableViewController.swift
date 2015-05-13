@@ -19,6 +19,12 @@ class ApartmentInfomationTableViewController: UITableViewController, ApartmentTe
         super.viewDidLoad()
         
     }
+    
+    override func viewDidAppear(animated: Bool) {
+        if newApartment.renewed == true {
+            tableView.reloadData()
+        }
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -161,6 +167,7 @@ class ApartmentInfomationTableViewController: UITableViewController, ApartmentTe
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         let aptCheckCtrl = segue.destinationViewController as! ApartmentChecksViewController
+        self.tableView.endEditing(true)
         aptCheckCtrl.newApartment = newApartment
         // Get the new view controller using [segue destinationViewController].
         // Pass the selected object to the new view controller.

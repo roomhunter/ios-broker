@@ -152,10 +152,10 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
                 uploadRequest.bucket = "roomhunter-static"
                 uploadRequest.contentType = "image/jpeg"
                 uploadRequest.ACL = AWSS3ObjectCannedACL.PublicRead
-                
-                self.newApartment.uploadRequests.append(uploadRequest)
-                self.newApartment.imageUrls.append(nil)
+        
                 dispatch_async(dispatch_get_main_queue(), {
+                    self.newApartment.uploadRequests.append(uploadRequest)
+                    self.newApartment.imageUrls.append(nil)
                     let items = self.newApartment.uploadRequests.count - 1
                     self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: items, inSection: 0)])
                     // upload method must be called before items insertion, otherwize, it is possible that upload is finished and it reload the item before insertion
@@ -232,8 +232,17 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
         if section + 1 == tableView.numberOfSections() {
             if newApartment?.mediaState == ApartmentMediaState.Ready {
                 submitButtonCell?.state = ApartmentMediaState.Loading
-                newApartment.submit({(res: NSDictionary) in
-    
+                newApartment.submit({[unowned self] (res: NSDictionary) in
+                    self.newApartment.renewApartment()
+                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.submitButtonCell?.state = .Success
+                        
+                        dispatch_after(delayTime, dispatch_get_main_queue(), {
+                            self.navigationController?.popToRootViewControllerAnimated(true)
+                        })
+                    })
                     }, fail: {[unowned self] (err: NSError) in
     
                         let alertController = UIAlertController(title: "Failed", message: "Server Response Error", preferredStyle: .Alert)

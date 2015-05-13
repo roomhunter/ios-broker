@@ -26,6 +26,7 @@ enum ApartmentMediaState: Int {
     case TooMany
     case Ready
     case Loading
+    case Success
 }
 
 class ApartmentModel {
@@ -44,7 +45,7 @@ class ApartmentModel {
     
     var addressLine1: String?
     var apartmentNumberString: String?
-    var cityCountryString: String = "New York"
+    var cityCountryString = "New York"
     
     var imageUrls = [String?]()
     var moveinDate = NSDate()
@@ -55,6 +56,8 @@ class ApartmentModel {
     
     var uploadRequests = [AWSS3TransferManagerUploadRequest?]()
     var imageThumbnails = [UIImage]()
+    
+    var renewed = false
     
     var moveinDateString: String {
         return dateFormatter.stringFromDate(moveinDate)
@@ -76,15 +79,17 @@ class ApartmentModel {
         dict["brokerFee"] = basicInformationDict["Broker Fee (%)"]!.toInt()
         dict["beds"] = basicInformationDict["How Many Bedrooms"]!.toInt()
         dict["bath"] = basicInformationDict["How Many Bathrooms"]!.toInt()
-        dict["livingroom"] = basicInformationDict["How Many Living Rooms"]!.toInt()
+        dict["livingRoom"] = basicInformationDict["How Many Living Rooms"]!.toInt()
         dict["floor"] = basicInformationDict["Which Floor"]!.toInt()
         dict["images"] = convertImages(imageUrls)
         dict["applicationFee"] = basicInformationDict["Application Fee"]!.toInt()!
         dict["moveinDate"] = dateFormatter.stringFromDate(moveinDate)
-        dict["waterelecIncluded"] = apartmentAmenitiesDict["Water Fee Included"]
-        dict["dishwasher"] = apartmentAmenitiesDict["Dish Washer"]
+        dict["waterFeeIncluded"] = apartmentAmenitiesDict["Water Fee Included"]
+        dict["elecFeeIncluded"] = apartmentAmenitiesDict["Electricity Fee Included"]
+        dict["gasFeeIncluded"] = apartmentAmenitiesDict["Gas Fee Included"]
+        dict["dishWasher"] = apartmentAmenitiesDict["Dish Washer"]
         dict["microwave"] = apartmentAmenitiesDict["Microwave"]
-        dict["airconditioner"] = apartmentAmenitiesDict["Air Conditioner"]
+        dict["airConditioner"] = apartmentAmenitiesDict["Air Conditioner"]
         dict["heater"] = apartmentAmenitiesDict["Heater"]
         dict["dryer"] = apartmentAmenitiesDict["Dryer"]
         dict["furniture"] = apartmentAmenitiesDict["Furniture"]
@@ -95,11 +100,12 @@ class ApartmentModel {
         dict["laundryRoom"] = buildingFacilitiesDict["Laundry Room"]
         dict["doorman"] = buildingFacilitiesDict["Doorman"]
         dict["gym"] = buildingFacilitiesDict["Gym"]
-        dict["swimmingpool"] = buildingFacilitiesDict["Swimming Pool"]
+        dict["swimmingPool"] = buildingFacilitiesDict["Swimming Pool"]
         dict["parking"] = buildingFacilitiesDict["Parking"]
         dict["additionalInfo1"] = additionalInfoDict[ApartmentModel.additionalInfoArray[0]]
         dict["additionalInfo2"] = additionalInfoDict[ApartmentModel.additionalInfoArray[1]]
         dict["coordinates"] = coordinate
+        
 //        dict["qrcode"] =
 //        dict["videos"] = 
 //        dict["status"] =
@@ -171,7 +177,33 @@ class ApartmentModel {
             additionalInfoDict[item] = ""
         }
     }
-    
+    func renewApartment() {
+        for item in ApartmentModel.basicInformationArray {
+            basicInformationDict[item] = ""
+        }
+        for item in ApartmentModel.apartmentAmenitiesArray {
+            apartmentAmenitiesDict[item] = false
+        }
+        for item in ApartmentModel.buildingFacilitiesArray {
+            buildingFacilitiesDict[item] = false
+        }
+        for item in ApartmentModel.additionalInfoArray {
+            additionalInfoDict[item] = ""
+        }
+        
+        addressLine1 = nil
+        apartmentNumberString = nil
+        cityCountryString = "New York"
+        
+        imageUrls = []
+        moveinDate = NSDate()
+        coordinate = nil
+        
+        uploadRequests = []
+        imageThumbnails = []
+        
+        renewed = true
+    }
     func convertAddressString(addressString: String, success: (Void -> Void)?) {
         geoCoder.geocodeAddressString("\(addressString), New York", completionHandler: {
             (placemarks: [AnyObject]!, error: NSError!) -> Void in

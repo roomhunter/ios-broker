@@ -125,6 +125,7 @@ class ApartmentChecksViewController: UITableViewController, ApartmentSwitchCellD
         // Get the new view controller using [segue destinationViewController].
         // Pass the selected object to the new view controller.
         let aptMediaCtrl = segue.destinationViewController as! ApartmentMediaUploadViewController
+        self.tableView.endEditing(true)
         aptMediaCtrl.newApartment = newApartment
     }
 
