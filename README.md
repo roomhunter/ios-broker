@@ -15,5 +15,14 @@ Tasks
 - [ ] cancel uploading of some images 
 - [ ] memory leaks of datepicker?
 - [x] release some memory after pushing to next view?
-- [ ] list uploading history
+- [x] list uploading history
+    - [x] pull down to refresh
+    - [ ] pull up to load moew
+
+References
+----------
+
+- Image Uploading with `AWSS3 SDK`: https://github.com/aws/aws-sdk-ios
+- Multiple images selection with `CTAssetsPickerController`: https://github.com/chiunam/CTAssetsPickerController
+- Table view image cache with `SDWebImage`: https://github.com/rs/SDWebImage
 
