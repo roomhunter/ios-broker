@@ -93,33 +93,7 @@ class ApartmentInfomationTableViewController: UITableViewController, ApartmentTe
 
 
     // MARK: - Table view delegate
-//    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//        let section = indexPath.section
-//        // last section
-//        if section + 1 == tableView.numberOfSections() {
-//            
-//        }
-//    }
-//    override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-//        let section = indexPath.section
-//        let row = indexPath.row
-//        switch section {
-//        case 0:
-//            // address
-//            return 132
-//        case 1:
-//            // switch cell, apartments amenities
-//            return 44
-//        case 2:
-//            // date
-//            return 200
-//        case 3:
-//            return 44
-//        default:
-//            return 0
-//        }
-//    }
-    
+
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         let section = indexPath.section
         let row = indexPath.row

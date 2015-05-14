@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14E11f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="9pv-A4-QxB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14E17e" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="9pv-A4-QxB">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -290,7 +290,7 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="lgP-X2-bVx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ApartmentSwitchCell" rowHeight="44" id="jyX-Wo-Nxg" customClass="ApartmentSwitchCell" customModule="Broker" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
@@ -430,7 +430,7 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="Z0u-uT-dqn">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ApartmentUploadingImagesCollectionCell" rowHeight="260" id="bxS-gl-7ZS" customClass="ApartmentUploadingImagesCollectionCell" customModule="Broker" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
@@ -586,10 +586,10 @@
             </objects>
             <point key="canvasLocation" x="2972.5" y="-238.5"/>
         </scene>
-        <!--Review Apartments Table View Controller-->
+        <!--My Uploaded-->
         <scene sceneID="uEc-0S-uwL">
             <objects>
-                <tableViewController id="h2f-Ri-aze" customClass="ReviewApartmentsTableViewController" customModule="Broker" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="My Uploaded" id="h2f-Ri-aze" customClass="ReviewApartmentsTableViewController" customModule="Broker" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="88" sectionHeaderHeight="22" sectionFooterHeight="22" id="8gn-mc-k5b">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -614,15 +614,15 @@
                                                 <constraint firstAttribute="height" constant="27" id="qVN-Ic-45q"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Under Review" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="ISj-Qw-Yaf">
-                                            <rect key="frame" x="284" y="54" width="83" height="25"/>
+                                        <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="In Review" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="ISj-Qw-Yaf">
+                                            <rect key="frame" x="292" y="56" width="75" height="23"/>
                                             <color key="backgroundColor" red="1" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="25" id="P7K-zK-Zpi"/>
-                                                <constraint firstAttribute="width" constant="83" id="QoR-yy-XIb"/>
+                                                <constraint firstAttribute="height" constant="23" id="P7K-zK-Zpi"/>
+                                                <constraint firstAttribute="width" constant="75" id="QoR-yy-XIb"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -667,7 +667,7 @@
                             <outlet property="delegate" destination="h2f-Ri-aze" id="nmc-iR-0VX"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="yQI-rW-QuW"/>
+                    <navigationItem key="navigationItem" title="My Uploaded" id="yQI-rW-QuW"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NT9-p8-b8O" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

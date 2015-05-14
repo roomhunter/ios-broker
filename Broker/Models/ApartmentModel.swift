@@ -68,10 +68,10 @@ class ApartmentModel {
         dict["orderPrice"] = basicInformationDict["Order Price"]!.toInt()
         
         if let numberString = apartmentNumberString?.stringByReplacingOccurrencesOfString("apt", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil) {
-            dict["addressDescription"] = "\(addressLine1!), Apt \(numberString)"
+            dict["addressDescription"] = "\(addressLine1!), Apt \(numberString)".uppercaseString
         }
         else {
-            dict["addressDescription"] = addressLine1!
+            dict["addressDescription"] = addressLine1!.uppercaseString
         }
         dict["city"] = cityCountryString
         dict["gist"] = basicInformationDict["Description"]
@@ -215,7 +215,7 @@ class ApartmentModel {
                 let coordinate2D = location.coordinate
                 self.cityCountryString = "\(placemark.subAdministrativeArea), \(placemark.administrativeArea) \(placemark.postalCode), \(placemark.ISOcountryCode)"
                 self.coordinate = [coordinate2D.latitude, coordinate2D.longitude]
-                self.addressLine1 = addressString
+                self.addressLine1 = addressString.uppercaseString
                 success?()
             }
         })

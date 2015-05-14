@@ -23,7 +23,7 @@ class ReviewApartmentCell: UITableViewCell {
             case .SoldOut:
                 statusLabel.text = "Sold Out"
             case .UnderReview:
-                statusLabel.text = "Under Review"
+                statusLabel.text = "In Review"
             }
         }
     }
