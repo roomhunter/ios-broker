@@ -17,7 +17,7 @@ Tasks
 - [x] release some memory after pushing to next view?
 - [x] list uploading history
     - [x] pull down to refresh
-    - [ ] pull up to load moew
+    - [ ] pull up to load more
 
 References
 ----------
