@@ -9,8 +9,9 @@ import Foundation
 
 class APIModel {
     var session: NSURLSession
-    let HOST = "http://test.roomhunter.us:3000/v1"
-    
+    let HOST = "https://api.roomhunter.us/v1"
+//    let HOST = "http://test.roomhunter.us:3000/v1"
+
     static let sharedInstance = APIModel()
     
     private init() {

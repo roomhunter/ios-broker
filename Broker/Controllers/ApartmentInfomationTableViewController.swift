@@ -67,7 +67,12 @@ class ApartmentInfomationTableViewController: UITableViewController, ApartmentTe
             let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentTextCell", forIndexPath: indexPath) as! ApartmentTextCell
             cell.key = ApartmentModel.basicInformationArray[row]
             if row > 0 {
-                cell.keyboardType = UIKeyboardType.NumberPad
+                if cell.key == "How Many Bathrooms" {
+                    cell.keyboardType = UIKeyboardType.NumbersAndPunctuation
+                }
+                else {
+                    cell.keyboardType = UIKeyboardType.NumberPad
+                }
             }
             else {
                 cell.keyboardType = UIKeyboardType.ASCIICapable

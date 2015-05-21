@@ -26,9 +26,10 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
         imagesActionSheet.delegate = self
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
             imagesActionSheet.addButtonWithTitle("Take Photo")
+            imagesPicker.sourceType = .Camera
+
         }
         imagesPicker.delegate = self
-        imagesPicker.sourceType = .Camera
         multipleImagesPicker.delegate = self
         multipleImagesPicker.assetsFilter = ALAssetsFilter.allPhotos()
         var error = NSErrorPointer()

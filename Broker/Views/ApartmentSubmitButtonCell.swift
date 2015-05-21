@@ -18,7 +18,7 @@ class ApartmentSubmitButtonCell: UITableViewCell {
             switch state {
             case .NotEnough:
                 submitLabel.textColor = UIColor.lightGrayColor()
-                submitLabel.text = "Please upload at least 8 photos"
+                submitLabel.text = "Please upload at least 4 photos"
                 activityIndicator.stopAnimating()
                 self.userInteractionEnabled = false
             case .TooMany:

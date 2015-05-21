@@ -31,8 +31,8 @@ enum ApartmentMediaState: Int {
 
 class ApartmentModel {
     
-    static let basicInformationArray = ["Description", "Total Price", "Order Price", "Broker Fee (%)", "How Many Bedrooms", "How Many Bathrooms", "How Many Living Rooms", "Which Floor", "Application Fee"]
-    static let apartmentAmenitiesArray = ["Electricity Fee Included", "Water Fee Included", "Gas Fee Included", "Dish Washer", "Microwave", "Oven", "Air Conditioner", "Washing Machine", "Dryer", "Heater", "Furniture"]
+    static let basicInformationArray = ["Description", "Monthly Rental", "Broker Fee (%)", "How Many Bedrooms", "How Many Bathrooms", "How Many Living Rooms", "Which Floor", "Application Fee"]
+    static let apartmentAmenitiesArray = ["Electricity Fee Included", "Water Fee Included", "Gas Fee Included", "Dish Washer", "Microwave", "Oven", "Air Conditioner", "Washing Machine and Dryer", "Heater", "Furniture"]
     static let buildingFacilitiesArray = ["Doorman", "Gym", "Laundry Room", "Elevator", "Swimming Pool", "Parking"]
     static let additionalInfoArray = ["Additional Info for room amenities", "Additional Info for building facilities"]
     
@@ -64,11 +64,18 @@ class ApartmentModel {
     }
     var requestData: NSDictionary {
         var dict = NSMutableDictionary()
-        dict["totalPrice"] = basicInformationDict["Total Price"]!.toInt()
-        dict["orderPrice"] = basicInformationDict["Order Price"]!.toInt()
+        // they are the same
+        dict["totalPrice"] = basicInformationDict["Monthly Rental"]!.toInt()
+        dict["orderPrice"] = basicInformationDict["Monthly Rental"]!.toInt()
+//        dict["orderPrice"] = basicInformationDict["Order Price"]!.toInt()
         
         if let numberString = apartmentNumberString?.stringByReplacingOccurrencesOfString("apt", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil) {
-            dict["addressDescription"] = "\(addressLine1!), Apt \(numberString)".uppercaseString
+            if numberString.isEmpty {
+                dict["addressDescription"] = addressLine1!.uppercaseString
+            }
+            else {
+                dict["addressDescription"] = "\(addressLine1!), Apt \(numberString)".uppercaseString
+            }
         }
         else {
             dict["addressDescription"] = addressLine1!.uppercaseString
@@ -78,7 +85,7 @@ class ApartmentModel {
         dict["elevator"] = buildingFacilitiesDict["Elevator"]
         dict["brokerFee"] = basicInformationDict["Broker Fee (%)"]!.toInt()
         dict["beds"] = basicInformationDict["How Many Bedrooms"]!.toInt()
-        dict["bath"] = basicInformationDict["How Many Bathrooms"]!.toInt()
+        dict["bath"] = NSNumberFormatter().numberFromString(basicInformationDict["How Many Bathrooms"]!)?.doubleValue
         dict["livingRoom"] = basicInformationDict["How Many Living Rooms"]!.toInt()
         dict["floor"] = basicInformationDict["Which Floor"]!.toInt()
         dict["images"] = convertImages(imageUrls)
@@ -91,12 +98,14 @@ class ApartmentModel {
         dict["microwave"] = apartmentAmenitiesDict["Microwave"]
         dict["airConditioner"] = apartmentAmenitiesDict["Air Conditioner"]
         dict["heater"] = apartmentAmenitiesDict["Heater"]
-        dict["dryer"] = apartmentAmenitiesDict["Dryer"]
+        // they are the same
+        dict["dryer"] = apartmentAmenitiesDict["Washing Machine and Dryer"]
+        dict["washingMachine"] = apartmentAmenitiesDict["Washing Machine and Dryer"]
+        
         dict["furniture"] = apartmentAmenitiesDict["Furniture"]
         dict["sublease"] = false
         dict["shortTermLease"] = false
         dict["oven"] = apartmentAmenitiesDict["Oven"]
-        dict["washingMachine"] = apartmentAmenitiesDict["Washing Machine"]
         dict["laundryRoom"] = buildingFacilitiesDict["Laundry Room"]
         dict["doorman"] = buildingFacilitiesDict["Doorman"]
         dict["gym"] = buildingFacilitiesDict["Gym"]
@@ -106,9 +115,7 @@ class ApartmentModel {
         dict["additionalInfo2"] = additionalInfoDict[ApartmentModel.additionalInfoArray[1]]
         dict["coordinates"] = coordinate
         
-//        dict["qrcode"] =
-//        dict["videos"] = 
-//        dict["status"] =
+//        dict["videos"] =
 //        dict["applicationDoc"] =
         
         return dict
@@ -128,16 +135,16 @@ class ApartmentModel {
         }
 
         // check numbers
-        let totalPrice = basicInformationDict["Total Price"]?.toInt()
-        let orderPrice = basicInformationDict["Order Price"]?.toInt()
+        let totalPrice = basicInformationDict["Monthly Rental"]?.toInt()
+//        let orderPrice = basicInformationDict["Order Price"]?.toInt()
         let brokerFee = basicInformationDict["Broker Fee (%)"]?.toInt()
         let bedrooms = basicInformationDict["How Many Bedrooms"]?.toInt()
-        let bathrooms = basicInformationDict["How Many Bathrooms"]?.toInt()
+        let bathrooms = NSNumberFormatter().numberFromString(basicInformationDict["How Many Bathrooms"]!)?.doubleValue
         let livingrooms = basicInformationDict["How Many Living Rooms"]?.toInt()
         let floor = basicInformationDict["Which Floor"]?.toInt()
         let applicationFee = basicInformationDict["Application Fee"]?.toInt()
         
-        if totalPrice == nil || orderPrice == nil || brokerFee == nil || bedrooms == nil || bathrooms == nil || livingrooms == nil || floor == nil || applicationFee == nil {
+        if totalPrice == nil || brokerFee == nil || bedrooms == nil || bathrooms == nil || livingrooms == nil || floor == nil || applicationFee == nil {
             return .ShouldBeNumbers
         }
         
@@ -147,7 +154,7 @@ class ApartmentModel {
     var mediaState: ApartmentMediaState {
         // at least 8 images
 
-        if imageUrls.count < 8 {
+        if imageUrls.count < 4 {
             return .NotEnough
         }
 //        else if imageUrls.count > 16 {
