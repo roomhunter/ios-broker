@@ -18,6 +18,9 @@ Tasks
 - [x] list uploading history
     - [x] pull down to refresh
     - [ ] pull up to load more
+- [x] fix image rotation caused by removing of tiff info
+- [x] add feature of cover image selction
+- [ ] rewrite some hard code of view -> key
 
 References
 ----------
