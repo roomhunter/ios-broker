@@ -16,6 +16,13 @@ class BrokerModel {
             return token
         }
     }
+    var email: String? {
+        get {
+            let userDefault = NSUserDefaults.standardUserDefaults()
+            let email = userDefault.stringForKey("email")
+            return email
+        }
+    }
     
     static let sharedInstance = BrokerModel()
     private init() {
@@ -26,6 +33,7 @@ class BrokerModel {
         // store to file system
         let userDefault = NSUserDefaults.standardUserDefaults()
         userDefault.setObject(token, forKey: "token")
+        userDefault.setObject(email, forKey: "email")
     }
     
 }

@@ -24,6 +24,7 @@ enum ApartmentInformationState: Int {
 enum ApartmentMediaState: Int {
     case NotEnough
     case TooMany
+    case SelectCover
     case Ready
     case Loading
     case Success
@@ -48,6 +49,7 @@ class ApartmentModel {
     var cityCountryString = "New York"
     
     var imageUrls = [String?]()
+    var coverIndex: Int?
     var moveinDate = NSDate()
     var coordinate: [Double]?
     
@@ -67,7 +69,6 @@ class ApartmentModel {
         // they are the same
         dict["totalPrice"] = basicInformationDict["Monthly Rental"]!.toInt()
         dict["orderPrice"] = basicInformationDict["Monthly Rental"]!.toInt()
-//        dict["orderPrice"] = basicInformationDict["Order Price"]!.toInt()
         
         if let numberString = apartmentNumberString?.stringByReplacingOccurrencesOfString("apt", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil) {
             if numberString.isEmpty {
@@ -99,7 +100,6 @@ class ApartmentModel {
         dict["airConditioner"] = apartmentAmenitiesDict["Air Conditioner"]
         dict["heater"] = apartmentAmenitiesDict["Heater"]
         // they are the same
-        dict["dryer"] = apartmentAmenitiesDict["Washing Machine and Dryer"]
         dict["washingMachine"] = apartmentAmenitiesDict["Washing Machine and Dryer"]
         
         dict["furniture"] = apartmentAmenitiesDict["Furniture"]
@@ -165,6 +165,9 @@ class ApartmentModel {
                 return .NotEnough
             }
         }
+        if coverIndex == nil {
+            return .SelectCover
+        }
         return .Ready
     }
     
@@ -221,7 +224,7 @@ class ApartmentModel {
                 let location = placemark.location
                 let coordinate2D = location.coordinate
                 self.cityCountryString = "\(placemark.subAdministrativeArea), \(placemark.administrativeArea) \(placemark.postalCode), \(placemark.ISOcountryCode)"
-                self.coordinate = [coordinate2D.latitude, coordinate2D.longitude]
+                self.coordinate = [coordinate2D.longitude, coordinate2D.latitude]
                 self.addressLine1 = addressString.uppercaseString
                 success?()
             }
@@ -236,8 +239,12 @@ class ApartmentModel {
     
     func convertImages(images: [String?]) -> [String] {
         var urls = [String]()
-        for url in images {
-            urls.append(url!)
+        urls.append(images[coverIndex!]!)
+        
+        for (index, url) in enumerate(images) {
+            if index != coverIndex! {
+                urls.append(url!)
+            }
         }
         return urls
     }

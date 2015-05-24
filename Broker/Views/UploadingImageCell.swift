@@ -12,6 +12,8 @@ class UploadingImageCell: UICollectionViewCell {
     @IBOutlet var imageView: UIImageView!
     @IBOutlet var progressView: UIProgressView!
     @IBOutlet var statusLabel: UILabel!
+    @IBOutlet var coverLabel: UILabel!
+    
     var progress: Float = 0.0 {
         didSet {
             if progress == 0.0 {

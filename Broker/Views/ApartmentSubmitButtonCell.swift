@@ -26,6 +26,11 @@ class ApartmentSubmitButtonCell: UITableViewCell {
                 submitLabel.text = "No more than 16 photos"
                 activityIndicator.stopAnimating()
                 self.userInteractionEnabled = false
+            case .SelectCover:
+                submitLabel.textColor = UIColor.lightGrayColor()
+                submitLabel.text = "Select One as Cover Photo"
+                activityIndicator.stopAnimating()
+                self.userInteractionEnabled = false
             case .Ready:
                 submitLabel.textColor = UIColor.orangeColor()
                 submitLabel.text = "Submit"

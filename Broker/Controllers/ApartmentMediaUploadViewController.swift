@@ -136,7 +136,8 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
 
             for asset in assets {
                 let representation = (asset as! ALAsset).defaultRepresentation()
-                let fullImage = UIImage(CGImage: representation.fullResolutionImage().takeUnretainedValue())
+//                let fullImage = UIImage(CGImage: representation.fullResolutionImage().takeUnretainedValue())
+                let fullImage = UIImage(CGImage: representation.fullResolutionImage().takeUnretainedValue(), scale: 1, orientation: UIImageOrientation(rawValue: representation.orientation().rawValue)!)
             
                 self.newApartment.imageThumbnails.append(self.getThumbnailFrom(fullImage!))
                 let fileName = NSProcessInfo.processInfo().globallyUniqueString.stringByAppendingString(".jpeg")
@@ -178,6 +179,7 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
         }
         
         cell.imageView.image = newApartment.imageThumbnails[row]
+        cell.coverLabel.hidden = true
         
         if let uploadRequest = newApartment.uploadRequests[row] {
             switch uploadRequest.state {
@@ -193,6 +195,14 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
                 
             case .Completed:
                 cell.progress = 1.0
+                if let coverIndex = newApartment.coverIndex {
+                    if coverIndex == row {
+                        cell.coverLabel.hidden = false
+                    }
+                    else {
+                        cell.coverLabel.hidden = true
+                    }
+                }
             case .NotStarted:
                 cell.progress = 0.0
                 // upload progress
@@ -219,6 +229,19 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
         // last item
         if row + 1 == collectionView.numberOfItemsInSection(0) {
             imagesActionSheet.showInView(self.tableView)
+        }
+        else {
+            if newApartment.mediaState == .Ready || newApartment.mediaState == .SelectCover {
+                newApartment.coverIndex = row
+                collectionView.reloadData()
+                tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: .Fade)
+
+            }
+//            else if newApartment.mediaState == .SelectCover {
+//                newApartment.coverIndex = row
+//                collectionView.reloadData()
+//                tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: .Fade)
+//            }
         }
     }
     

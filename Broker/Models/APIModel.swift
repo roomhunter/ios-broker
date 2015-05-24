@@ -10,8 +10,8 @@ import Foundation
 class APIModel {
     var session: NSURLSession
     let HOST = "https://api.roomhunter.us/v1"
-//    let HOST = "http://test.roomhunter.us:3000/v1"
-
+    let TEST_HOST = "http://test.roomhunter.us:3000/v1"
+    
     static let sharedInstance = APIModel()
     
     private init() {
@@ -21,7 +21,15 @@ class APIModel {
     }
     
     func loginWith(email: String, password: String, success: NSDictionary -> Void, fail: NSError -> Void) {
+        let url: String
         let req = ["password": password, "email": email]
+        let broker = BrokerModel.sharedInstance
+//        if broker.email == "test@test.test" ||  {
+//            
+//        }
+//        else {
+//            
+//        }
         post("\(HOST)/users/login", data: req , success: success, fail: fail)
     }
     
@@ -91,7 +99,6 @@ class APIModel {
         }
         request.HTTPMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-//        request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.HTTPBody = bodyData
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
 

@@ -491,6 +491,12 @@
                                                                 <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cover" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ea9-Ag-J2q">
+                                                                <rect key="frame" x="48" y="4" width="28" height="12"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                                <color key="textColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
                                                         </subviews>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     </view>
@@ -501,7 +507,9 @@
                                                         <constraint firstItem="32y-k5-ceM" firstAttribute="leading" secondItem="WAJ-If-Bdb" secondAttribute="trailing" constant="-61" id="J5O-0i-hMt"/>
                                                         <constraint firstItem="WAJ-If-Bdb" firstAttribute="top" secondItem="pVV-uI-fSS" secondAttribute="topMargin" constant="-8" id="Mpu-cZ-Tua"/>
                                                         <constraint firstItem="WAJ-If-Bdb" firstAttribute="centerX" secondItem="u9W-GN-kth" secondAttribute="centerX" id="OIT-sX-TGh"/>
+                                                        <constraint firstItem="ea9-Ag-J2q" firstAttribute="trailing" secondItem="pVV-uI-fSS" secondAttribute="trailingMargin" constant="4" id="QOt-Q6-GjY"/>
                                                         <constraint firstAttribute="bottomMargin" secondItem="u9W-GN-kth" secondAttribute="bottom" constant="-8" id="SPF-iL-Y8Y"/>
+                                                        <constraint firstItem="ea9-Ag-J2q" firstAttribute="top" secondItem="pVV-uI-fSS" secondAttribute="topMargin" constant="-4" id="gW0-Tk-qdU"/>
                                                         <constraint firstItem="WAJ-If-Bdb" firstAttribute="width" secondItem="u9W-GN-kth" secondAttribute="width" id="k1M-88-9fO"/>
                                                         <constraint firstItem="32y-k5-ceM" firstAttribute="leading" secondItem="WAJ-If-Bdb" secondAttribute="leading" id="neB-ai-0Xa"/>
                                                         <constraint firstItem="WAJ-If-Bdb" firstAttribute="leading" secondItem="pVV-uI-fSS" secondAttribute="leadingMargin" constant="-8" id="p8X-4f-cMi"/>
@@ -515,6 +523,7 @@
                                                         </mask>
                                                     </variation>
                                                     <connections>
+                                                        <outlet property="coverLabel" destination="ea9-Ag-J2q" id="hFp-DR-EGf"/>
                                                         <outlet property="imageView" destination="WAJ-If-Bdb" id="LDt-Y8-EtY"/>
                                                         <outlet property="progressView" destination="u9W-GN-kth" id="tXI-NK-kXG"/>
                                                         <outlet property="statusLabel" destination="32y-k5-ceM" id="DGK-fD-xm1"/>
