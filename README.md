@@ -20,6 +20,7 @@ Tasks
     - [ ] pull up to load more
 - [x] fix image rotation caused by removing of tiff info
 - [x] add feature of cover image selction
+- [x] remove unavailable apartment
 - [ ] rewrite some hard code of view -> key
 
 References
