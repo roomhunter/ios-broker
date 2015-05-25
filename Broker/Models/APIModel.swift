@@ -9,8 +9,8 @@ import Foundation
 
 class APIModel {
     var session: NSURLSession
-    let HOST = "https://api.roomhunter.us/v1"
-    let TEST_HOST = "http://test.roomhunter.us:3000/v1"
+//    let HOST = "https://api.roomhunter.us/v1"
+    let HOST = "http://test.roomhunter.us:3000/v1"
     
     static let sharedInstance = APIModel()
     
@@ -24,12 +24,6 @@ class APIModel {
         let url: String
         let req = ["password": password, "email": email]
         let broker = BrokerModel.sharedInstance
-//        if broker.email == "test@test.test" ||  {
-//            
-//        }
-//        else {
-//            
-//        }
         post("\(HOST)/users/login", data: req , success: success, fail: fail)
     }
     
@@ -53,7 +47,16 @@ class APIModel {
         let path = "\(HOST)/brokers/apartments?userToken=\(token!)&pageOffset=\(offset)&pageLimit=10"
         get(path, success: success, fail: fail)
     }
-    
+    func removeApartment(id: String, success: NSDictionary -> Void, fail: NSError -> Void) {
+        let token = BrokerModel.sharedInstance.token
+        if token == nil {
+            fail(NSError(domain: "token invalid", code: 401, userInfo: nil))
+            return
+        }
+        let empty = NSDictionary()
+        let path = "\(HOST)/brokers/apartmentOff/\(id)?userToken=\(token!)"
+        post(path, data: empty, success: success, fail: fail)
+    }
     
     // low-level requests
     private func get(path: String, success: (NSDictionary -> Void)?, fail: ((NSError) -> Void)? = nil) {

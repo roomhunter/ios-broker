@@ -492,8 +492,8 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cover" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ea9-Ag-J2q">
-                                                                <rect key="frame" x="48" y="4" width="28" height="12"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                                <rect key="frame" x="24.5" y="4" width="31" height="13.5"/>
+                                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
                                                                 <color key="textColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
@@ -507,9 +507,10 @@
                                                         <constraint firstItem="32y-k5-ceM" firstAttribute="leading" secondItem="WAJ-If-Bdb" secondAttribute="trailing" constant="-61" id="J5O-0i-hMt"/>
                                                         <constraint firstItem="WAJ-If-Bdb" firstAttribute="top" secondItem="pVV-uI-fSS" secondAttribute="topMargin" constant="-8" id="Mpu-cZ-Tua"/>
                                                         <constraint firstItem="WAJ-If-Bdb" firstAttribute="centerX" secondItem="u9W-GN-kth" secondAttribute="centerX" id="OIT-sX-TGh"/>
-                                                        <constraint firstItem="ea9-Ag-J2q" firstAttribute="trailing" secondItem="pVV-uI-fSS" secondAttribute="trailingMargin" constant="4" id="QOt-Q6-GjY"/>
+                                                        <constraint firstItem="ea9-Ag-J2q" firstAttribute="trailing" secondItem="pVV-uI-fSS" secondAttribute="trailingMargin" id="QOt-Q6-GjY"/>
                                                         <constraint firstAttribute="bottomMargin" secondItem="u9W-GN-kth" secondAttribute="bottom" constant="-8" id="SPF-iL-Y8Y"/>
                                                         <constraint firstItem="ea9-Ag-J2q" firstAttribute="top" secondItem="pVV-uI-fSS" secondAttribute="topMargin" constant="-4" id="gW0-Tk-qdU"/>
+                                                        <constraint firstAttribute="centerX" secondItem="ea9-Ag-J2q" secondAttribute="centerX" id="hLI-lQ-rfq"/>
                                                         <constraint firstItem="WAJ-If-Bdb" firstAttribute="width" secondItem="u9W-GN-kth" secondAttribute="width" id="k1M-88-9fO"/>
                                                         <constraint firstItem="32y-k5-ceM" firstAttribute="leading" secondItem="WAJ-If-Bdb" secondAttribute="leading" id="neB-ai-0Xa"/>
                                                         <constraint firstItem="WAJ-If-Bdb" firstAttribute="leading" secondItem="pVV-uI-fSS" secondAttribute="leadingMargin" constant="-8" id="p8X-4f-cMi"/>
@@ -520,6 +521,7 @@
                                                         <mask key="constraints">
                                                             <exclude reference="J5O-0i-hMt"/>
                                                             <exclude reference="uR6-Md-iXv"/>
+                                                            <exclude reference="QOt-Q6-GjY"/>
                                                         </mask>
                                                     </variation>
                                                     <connections>
@@ -613,7 +615,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ReviewApartmentCell" id="4B5-tE-y87" customClass="ReviewApartmentCell" customModule="Broker" customModuleProvider="target">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ReviewApartmentCell" id="4B5-tE-y87" customClass="ReviewApartmentCell" customModule="Broker" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4B5-tE-y87" id="F5F-m4-wiK">
                                     <autoresizingMask key="autoresizingMask"/>

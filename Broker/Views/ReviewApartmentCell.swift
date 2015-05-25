@@ -20,10 +20,12 @@ class ReviewApartmentCell: UITableViewCell {
             switch status {
             case .OnSale:
                 statusLabel.text = "On Sale"
-            case .SoldOut:
-                statusLabel.text = "Sold Out"
+            case .OffShelves:
+                statusLabel.text = "Off Shelves"
             case .UnderReview:
                 statusLabel.text = "In Review"
+            case .SoldOut:
+                statusLabel.text = "Sold Out"
             }
         }
     }

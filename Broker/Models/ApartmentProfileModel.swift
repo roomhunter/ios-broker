@@ -10,29 +10,32 @@ import Foundation
 
 enum ApartmentStatus: Int {
     case OnSale
-    case SoldOut
+    case OffShelves
     case UnderReview
+    case SoldOut
 }
 class ApartmentProfileItem {
     var thumbnail: NSURL
     var address: String
     var price: Int
     var status: ApartmentStatus
+    var id: String
     
     var priceString: String {
         return "$\(price) / per month"
     }
     
-    init(thumbnail: String, address: String, price: Int, status: Int) {
+    init(thumbnail: String, address: String, price: Int, status: Int, id: String) {
         
         self.thumbnail = NSURL(string: thumbnail)!
         self.address = address
         self.price = price
-        if status >= 0 && status <= 2 {
+        self.id = id
+        if status >= 0 && status <= 3 {
             self.status = ApartmentStatus(rawValue: status)!
         }
         else {
-            self.status = ApartmentStatus(rawValue: 2)!
+            self.status = ApartmentStatus(rawValue: 1)!
         }
     }
 }
@@ -57,8 +60,9 @@ class ApartmentProfileList {
                 let address = rawItem["addressDescription"] as? String
                 let price = rawItem["totalPrice"] as? Int
                 let status = rawItem["status"] as? Int
-                if thumbnail != nil && address != nil && price != nil && status != nil{
-                    let newItem = ApartmentProfileItem(thumbnail: thumbnail!, address: address!, price: price!, status: status!)
+                let id = rawItem["aptId"] as? String
+                if thumbnail != nil && address != nil && price != nil && status != nil && id != nil {
+                    let newItem = ApartmentProfileItem(thumbnail: thumbnail!, address: address!, price: price!, status: status!, id: id!)
                     apartments.append(newItem)
                 }
             }
