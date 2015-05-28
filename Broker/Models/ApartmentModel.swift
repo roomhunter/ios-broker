@@ -82,7 +82,7 @@ class ApartmentModel {
             dict["addressDescription"] = addressLine1!.uppercaseString
         }
         dict["city"] = cityCountryString
-        dict["gist"] = basicInformationDict["Description"]
+        dict["gist"] = basicInformationDict["Description"]?.stringByReplacingOccurrencesOfString("\n", withString: " ", options: NSStringCompareOptions.allZeros, range: nil).stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet())
         dict["elevator"] = buildingFacilitiesDict["Elevator"]
         dict["brokerFee"] = basicInformationDict["Broker Fee (%)"]!.toInt()
         dict["beds"] = basicInformationDict["How Many Bedrooms"]!.toInt()

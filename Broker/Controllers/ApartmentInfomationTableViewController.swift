@@ -64,22 +64,28 @@ class ApartmentInfomationTableViewController: UITableViewController, ApartmentTe
             cell.cityCountryField.text = newApartment.cityCountryString
             return cell
         case 1:
-            let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentTextCell", forIndexPath: indexPath) as! ApartmentTextCell
-            cell.key = ApartmentModel.basicInformationArray[row]
+            
             if row > 0 {
+                let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentTextCell", forIndexPath: indexPath) as! ApartmentTextCell
+                cell.key = ApartmentModel.basicInformationArray[row]
                 if cell.key == "How Many Bathrooms" {
                     cell.keyboardType = UIKeyboardType.NumbersAndPunctuation
                 }
                 else {
                     cell.keyboardType = UIKeyboardType.NumberPad
                 }
+                cell.itemTextField.text = newApartment.basicInformationDict[cell.key!]
+                cell.delegate = self
+                return cell
             }
             else {
+                let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentDescriptionCell", forIndexPath: indexPath) as! ApartmentDescriptionCell
+                cell.key = ApartmentModel.basicInformationArray[row]
+                cell.delegate = self
                 cell.keyboardType = UIKeyboardType.ASCIICapable
+                return cell
             }
-            cell.itemTextField.text = newApartment.basicInformationDict[cell.key!]
-            cell.delegate = self
-            return cell
+            
         case 2:
             let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentDateCell", forIndexPath: indexPath) as! ApartmentDateCell
             cell.datePicker.date = self.newApartment.moveinDate
@@ -108,6 +114,9 @@ class ApartmentInfomationTableViewController: UITableViewController, ApartmentTe
             return 132
         case 1:
             // switch cell, apartments amenities
+            if row == 0 {
+                return 132
+            }
             return 44
         case 2:
             // date

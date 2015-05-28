@@ -28,6 +28,7 @@
 		BA41DB231AFC25D300AB9616 /* BrokerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41DB221AFC25D300AB9616 /* BrokerModel.swift */; };
 		BA4AF84D1AFFFC67008266F3 /* ApartmentToAmenitiesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4AF84C1AFFFC67008266F3 /* ApartmentToAmenitiesCell.swift */; };
 		BA4AF84F1B001107008266F3 /* ApartmentAddressControlCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4AF84E1B001107008266F3 /* ApartmentAddressControlCell.swift */; };
+		BA5B545A1B16BA58008A9260 /* ApartmentDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5B54591B16BA57008A9260 /* ApartmentDescriptionCell.swift */; };
 		BA9D30EF1B03A96100870B46 /* ReviewApartmentsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9D30EE1B03A96100870B46 /* ReviewApartmentsTableViewController.swift */; };
 		BA9D30F11B03AA4700870B46 /* ReviewApartmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9D30F01B03AA4700870B46 /* ReviewApartmentCell.swift */; };
 		BA9D30F31B03B0AA00870B46 /* ApartmentProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9D30F21B03B0AA00870B46 /* ApartmentProfileModel.swift */; };
@@ -73,6 +74,7 @@
 		BA41DB221AFC25D300AB9616 /* BrokerModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BrokerModel.swift; path = Models/BrokerModel.swift; sourceTree = "<group>"; };
 		BA4AF84C1AFFFC67008266F3 /* ApartmentToAmenitiesCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentToAmenitiesCell.swift; path = Views/ApartmentToAmenitiesCell.swift; sourceTree = "<group>"; };
 		BA4AF84E1B001107008266F3 /* ApartmentAddressControlCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentAddressControlCell.swift; path = Views/ApartmentAddressControlCell.swift; sourceTree = "<group>"; };
+		BA5B54591B16BA57008A9260 /* ApartmentDescriptionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentDescriptionCell.swift; path = Views/ApartmentDescriptionCell.swift; sourceTree = "<group>"; };
 		BA9D30EE1B03A96100870B46 /* ReviewApartmentsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReviewApartmentsTableViewController.swift; path = Controllers/ReviewApartmentsTableViewController.swift; sourceTree = "<group>"; };
 		BA9D30F01B03AA4700870B46 /* ReviewApartmentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReviewApartmentCell.swift; path = Views/ReviewApartmentCell.swift; sourceTree = "<group>"; };
 		BA9D30F21B03B0AA00870B46 /* ApartmentProfileModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentProfileModel.swift; path = Models/ApartmentProfileModel.swift; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 			children = (
 				BA41DB191AFB648B00AB9616 /* AddImageButtonCell.swift */,
 				BA41DB0C1AFA8E5900AB9616 /* ApartmentTextCell.swift */,
+				BA5B54591B16BA57008A9260 /* ApartmentDescriptionCell.swift */,
 				BA9D30F01B03AA4700870B46 /* ReviewApartmentCell.swift */,
 				BA41DB101AFA9ADE00AB9616 /* ApartmentDateCell.swift */,
 				BA4AF84E1B001107008266F3 /* ApartmentAddressControlCell.swift */,
@@ -357,6 +360,7 @@
 				BA41DB111AFA9ADE00AB9616 /* ApartmentDateCell.swift in Sources */,
 				BA41DB1C1AFBEF9F00AB9616 /* ApartmentSubmitButtonCell.swift in Sources */,
 				BA41DB231AFC25D300AB9616 /* BrokerModel.swift in Sources */,
+				BA5B545A1B16BA58008A9260 /* ApartmentDescriptionCell.swift in Sources */,
 				BA4AF84F1B001107008266F3 /* ApartmentAddressControlCell.swift in Sources */,
 				BA3B4DFA1AFF3C6600AAB6E8 /* ApartmentMediaUploadViewController.swift in Sources */,
 				BA41DB1A1AFB648B00AB9616 /* AddImageButtonCell.swift in Sources */,
