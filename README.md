@@ -12,7 +12,7 @@ Tasks
 	- [x] images synchronization with Ji's internal tool
     - [x] work with Yao's server'
 - [x] multiple selection of images
-- [ ] uploading timeout 
+- [x] uploading timeout 
 - [ ] memory leaks of datepicker?
 - [x] release some memory after pushing to next view?
 - [x] list uploading history
