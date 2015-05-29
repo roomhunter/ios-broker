@@ -60,7 +60,7 @@ class ApartmentInfomationTableViewController: UITableViewController, ApartmentTe
             let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentAddressControlCell", forIndexPath: indexPath) as! ApartmentAddressControlCell
             cell.delegate = self
             cell.addressLine1Field.text = newApartment.addressLine1
-            cell.addressLine2Field.text = newApartment.apartmentNumberString
+            cell.addressLine2Field.text = newApartment.addressLine2
             cell.cityCountryField.text = newApartment.cityCountryString
             return cell
         case 1:
@@ -153,7 +153,7 @@ class ApartmentInfomationTableViewController: UITableViewController, ApartmentTe
     }
     
     func apartmentNumberDidChangeTo(numberString: String) {
-        newApartment.apartmentNumberString = numberString
+        newApartment.addressLine2 = numberString
     }
     
     func didEndEditingOf(key: String, value: String) {

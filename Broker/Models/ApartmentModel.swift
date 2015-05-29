@@ -45,7 +45,7 @@ class ApartmentModel {
     var additionalInfoDict = [String: String]()
     
     var addressLine1: String?
-    var apartmentNumberString: String?
+    var addressLine2: String?
     var cityCountryString = "New York"
     
     var imageUrls = [String?]()
@@ -58,6 +58,7 @@ class ApartmentModel {
     
     var uploadRequests = [AWSS3TransferManagerUploadRequest?]()
     var imageThumbnails = [UIImage]()
+    var failedRequests = Dictionary<Int, Bool>()
     
     var renewed = false
     
@@ -70,7 +71,7 @@ class ApartmentModel {
         dict["totalPrice"] = basicInformationDict["Monthly Rental"]!.toInt()
         dict["orderPrice"] = basicInformationDict["Monthly Rental"]!.toInt()
         
-        if let numberString = apartmentNumberString?.stringByReplacingOccurrencesOfString("apt", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil) {
+        if let numberString = addressLine2?.stringByReplacingOccurrencesOfString("apt", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil) {
             if numberString.isEmpty {
                 dict["addressDescription"] = addressLine1!.uppercaseString
             }
@@ -157,11 +158,8 @@ class ApartmentModel {
         if imageUrls.count < 4 {
             return .NotEnough
         }
-//        else if imageUrls.count > 16 {
-//            return .TooMany
-//        }
-        for url in imageUrls {
-            if url == nil {
+        for (index, url) in enumerate(imageUrls)  {
+            if url == nil && failedRequests[index] == nil {
                 return .NotEnough
             }
         }
@@ -202,7 +200,7 @@ class ApartmentModel {
         }
         
         addressLine1 = nil
-        apartmentNumberString = nil
+        addressLine2 = nil
         cityCountryString = "New York"
         
         imageUrls = []
@@ -242,7 +240,7 @@ class ApartmentModel {
         urls.append(images[coverIndex!]!)
         
         for (index, url) in enumerate(images) {
-            if index != coverIndex! {
+            if index != coverIndex! && failedRequests[index] == nil {
                 urls.append(url!)
             }
         }

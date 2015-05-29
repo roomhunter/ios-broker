@@ -124,10 +124,15 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
                 let items = self.newApartment.uploadRequests.count - 1
                 self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: items, inSection: 0)])
                 // upload method must be called before items insertion, otherwize, it is possible that upload is finished and it reload the item before insertion
+                self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: UITableViewRowAnimation.Fade)
+
                 self.upload(uploadRequest)
                 
                 })
             })
+    }
+    func assetsPickerController(picker: CTAssetsPickerController!, shouldSelectAsset asset: ALAsset!) -> Bool {
+        return picker.selectedAssets.count < 8
     }
     
     func assetsPickerController(picker: CTAssetsPickerController!, didFinishPickingAssets assets: [AnyObject]!) {
@@ -161,6 +166,8 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
                 })
             }
             dispatch_async(dispatch_get_main_queue(), { [unowned self] in
+                self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: UITableViewRowAnimation.Fade)
+
                 self.multipleImagesPicker.selectedAssets = []
             })
         })
@@ -180,6 +187,11 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
         
         cell.imageView.image = newApartment.imageThumbnails[row]
         cell.coverLabel.hidden = true
+        
+        if newApartment.failedRequests[row] != nil {
+            cell.progress = -1.0
+            return cell
+        }
         
         if let uploadRequest = newApartment.uploadRequests[row] {
             switch uploadRequest.state {
@@ -213,10 +225,9 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
                         }
                     })
                 }
-                
             default:
                 cell.imageView.image = nil
-                cell.progress = -1.0
+//                cell.progress = -1.0
             }
         }
         
@@ -237,11 +248,6 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
                 tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: .Fade)
 
             }
-//            else if newApartment.mediaState == .SelectCover {
-//                newApartment.coverIndex = row
-//                collectionView.reloadData()
-//                tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: .Fade)
-//            }
         }
     }
     
@@ -317,6 +323,21 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
         let transferManager = AWSS3TransferManager.defaultS3TransferManager()
         
         transferManager.upload(uploadRequest).continueWithBlock { [unowned self] (task) -> AnyObject! in
+            if let error = task.error {
+                
+                if let index = self.indexOfUploadRequest(self.newApartment.uploadRequests, uploadRequest: uploadRequest) {
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.newApartment.failedRequests[index] = true
+                        let indexPath = NSIndexPath(forRow: index, inSection: 0)
+                        self.collectionView?.reloadItemsAtIndexPaths([indexPath])
+                        self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: UITableViewRowAnimation.Fade)
+
+                    })
+                    println("upload() failed: [\(index)]")
+
+                }
+            }
+
             // finished
             if task.result != nil {
                 if let index = self.indexOfUploadRequest(self.newApartment.uploadRequests, uploadRequest: uploadRequest) {
