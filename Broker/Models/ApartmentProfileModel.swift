@@ -42,13 +42,35 @@ class ApartmentProfileItem {
 class ApartmentProfileList {
     var data = [ApartmentProfileItem]()
     let api = APIModel.sharedInstance
+    var currentOffset = 1
     
-    func refreshData(success: Void -> Void) {
-        api.getApartments(1, success: { [unowned self](res: NSDictionary) in
+    func refreshDataThen(success: Void -> Void) {
+        currentOffset = 1
+        api.getApartments(currentOffset, success: { [unowned self](res: NSDictionary) in
             self.data = self.apartmentsFromJson(res)
             success()
             }, fail: { (err: NSError) in
                 
+        })
+    }
+    func tryLoadingMore(success: Void -> Void, faild: Void -> Void) {
+        if currentOffset < 0 {
+            faild()
+            return
+        }
+        api.getApartments(currentOffset + 1, success: { [unowned self](res: NSDictionary) in
+            if let list = (res["data"] as? NSDictionary)?["list"] as? [AnyObject] {
+                if list.isEmpty {
+                    return
+                }
+                self.data += self.apartmentsFromJson(res)
+                self.currentOffset += 1
+            }
+//            println(res)
+            success()
+            }, fail: {(err: NSError) in
+                self.currentOffset = -1
+                faild()
         })
     }
     

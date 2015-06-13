@@ -17,7 +17,8 @@ Tasks
 - [x] release some memory after pushing to next view?
 - [x] list uploading history
     - [x] pull down to refresh
-    - [ ] pull up to load more
+    - [x] pull up to load more
+        - [ ] bottom indicator
 - [x] fix image rotation caused by removing of tiff info
 - [x] add feature of cover image selction
 - [x] remove unavailable apartment

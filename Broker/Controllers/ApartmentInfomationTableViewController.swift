@@ -82,7 +82,7 @@ class ApartmentInfomationTableViewController: UITableViewController, ApartmentTe
                 let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentDescriptionCell", forIndexPath: indexPath) as! ApartmentDescriptionCell
                 cell.key = ApartmentModel.basicInformationArray[row]
                 cell.delegate = self
-                cell.keyboardType = UIKeyboardType.ASCIICapable
+                cell.keyboardType = UIKeyboardType.Default
                 return cell
             }
             

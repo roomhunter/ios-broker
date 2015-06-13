@@ -8,41 +8,40 @@
 
 import UIKit
 
-class ReviewApartmentsTableViewController: UITableViewController {
+class ReviewApartmentsTableViewController: UITableViewController, UIScrollViewDelegate {
     
-    let list = ApartmentProfileList()
-    var isRefreshing = false
+    let myList = ApartmentProfileList()
+    var isLoading = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        list.refreshData({
-            dispatch_async(dispatch_get_main_queue(), {
-                self.tableView.reloadData()
-            })
-        })
         self.refreshControl = UIRefreshControl()
-        self.refreshControl!.addTarget(self, action: "refreshTable:", forControlEvents: UIControlEvents.ValueChanged)
+        self.refreshControl!.addTarget(self, action: "refreshControlChanged:", forControlEvents: UIControlEvents.ValueChanged)
+        refreshTable()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    func refreshTable(sender: UIRefreshControl) {
+    func refreshControlChanged(sender: UIRefreshControl) {
+        refreshTable()
+    }
+    func refreshTable() {
         // because this method always excuted in main thread, so it is safe. more investigation required
-        if isRefreshing == true {
+        if isLoading == true {
             return
         }
-        isRefreshing == true
-        list.refreshData({
+        isLoading = true
+        myList.refreshDataThen({
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
                 self.refreshControl?.endRefreshing()
-                self.isRefreshing = false
+                self.isLoading = false
             })
         })
     }
+    
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -54,14 +53,14 @@ class ReviewApartmentsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
-        return list.data.count
+        return myList.data.count
     }
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("ReviewApartmentCell", forIndexPath: indexPath) as! ReviewApartmentCell
         let row = indexPath.row
-        let item = list.data[row]
+        let item = myList.data[row]
         cell.addressLabel.text = item.address
         cell.priceLabel.text = item.priceString
         cell.status = item.status
@@ -74,7 +73,7 @@ class ReviewApartmentsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         // Return NO if you do not want the specified item to be editable.
         let row = indexPath.row
-        let item = list.data[row]
+        let item = myList.data[row]
         if item.status == .SoldOut {
             return false
         }
@@ -89,13 +88,13 @@ class ReviewApartmentsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             let row = indexPath.row
-            APIModel.sharedInstance.removeApartment(list.data[row].id, success: {
+            APIModel.sharedInstance.removeApartment(myList.data[row].id, success: {
                 (res: NSDictionary) in
                 
                 }, fail: {
                     (err: NSError) in
             })
-            list.data.removeAtIndex(row)
+            myList.data.removeAtIndex(row)
             // Delete the row from the data source
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
@@ -103,6 +102,38 @@ class ReviewApartmentsTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, titleForDeleteConfirmationButtonForRowAtIndexPath indexPath: NSIndexPath) -> String! {
         return "Remove"
+    }
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        // is not the last row
+        if indexPath.row != myList.data.count - 1 {
+            return
+        }
+        // only executed in main queue
+        if isLoading {
+            return
+        }
+        isLoading = true
+        myList.tryLoadingMore({ [unowned self] in
+            dispatch_async(dispatch_get_main_queue(), {
+                let currentItems = self.tableView.numberOfRowsInSection(0)
+                let targetItems = self.myList.data.count
+                var newIndexPaths = [NSIndexPath]()
+                
+                for index in currentItems..<targetItems {
+                    newIndexPaths.append(NSIndexPath(forRow: index, inSection: 0))
+                }
+                
+                self.tableView.beginUpdates()
+                self.tableView.insertRowsAtIndexPaths(newIndexPaths, withRowAnimation: .Top)
+                self.tableView.endUpdates()
+                self.isLoading  = false
+
+            })
+            }, faild: { [unowned self] in
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.isLoading = false
+                })
+        })
     }
     
 
