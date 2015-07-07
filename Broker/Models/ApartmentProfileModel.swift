@@ -75,6 +75,7 @@ class ApartmentProfileList {
     }
     
     func apartmentsFromJson(jsonObject: NSDictionary) -> [ApartmentProfileItem] {
+        println(jsonObject)
         var apartments = [ApartmentProfileItem]()
         if let rawItems = (jsonObject["data"] as? NSDictionary)?["list"] as? [NSDictionary] {
             for rawItem in rawItems {

@@ -44,7 +44,7 @@ class APIModel {
             fail(NSError(domain: "token invalid", code: 401, userInfo: nil))
             return
         }
-        let path = "\(HOST)/brokers/apartments?userToken=\(token!)&pageOffset=\(offset)&pageLimit=10"
+        let path = "\(HOST)/brokers/apartments?userToken=\(token!)&pageOffset=\(offset)&pageLimit=100"
         get(path, success: success, fail: fail)
     }
     func removeApartment(id: String, success: NSDictionary -> Void, fail: NSError -> Void) {

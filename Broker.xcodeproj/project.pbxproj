@@ -33,6 +33,8 @@
 		BA9D30F11B03AA4700870B46 /* ReviewApartmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9D30F01B03AA4700870B46 /* ReviewApartmentCell.swift */; };
 		BA9D30F31B03B0AA00870B46 /* ApartmentProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9D30F21B03B0AA00870B46 /* ApartmentProfileModel.swift */; };
 		BAB6D4C41AFC471C005DBDFE /* ApartmentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB6D4C31AFC471C005DBDFE /* ApartmentModel.swift */; };
+		BAEF1D211B4A61CA00BAD7F3 /* ApartmentVideoUploadController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEF1D201B4A61CA00BAD7F3 /* ApartmentVideoUploadController.swift */; };
+		BAEF1D241B4BB66600BAD7F3 /* SDAVAssetExportSession.m in Sources */ = {isa = PBXBuildFile; fileRef = BAEF1D231B4BB66600BAD7F3 /* SDAVAssetExportSession.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +81,9 @@
 		BA9D30F01B03AA4700870B46 /* ReviewApartmentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReviewApartmentCell.swift; path = Views/ReviewApartmentCell.swift; sourceTree = "<group>"; };
 		BA9D30F21B03B0AA00870B46 /* ApartmentProfileModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentProfileModel.swift; path = Models/ApartmentProfileModel.swift; sourceTree = "<group>"; };
 		BAB6D4C31AFC471C005DBDFE /* ApartmentModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentModel.swift; path = Models/ApartmentModel.swift; sourceTree = "<group>"; };
+		BAEF1D201B4A61CA00BAD7F3 /* ApartmentVideoUploadController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApartmentVideoUploadController.swift; path = Controllers/ApartmentVideoUploadController.swift; sourceTree = "<group>"; };
+		BAEF1D221B4BB66600BAD7F3 /* SDAVAssetExportSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDAVAssetExportSession.h; path = Lib/SDAVAssetExportSession.h; sourceTree = "<group>"; };
+		BAEF1D231B4BB66600BAD7F3 /* SDAVAssetExportSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDAVAssetExportSession.m; path = Lib/SDAVAssetExportSession.m; sourceTree = "<group>"; };
 		C54721854C403AAC887A3971 /* Pods-Broker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Broker.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Broker/Pods-Broker.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -143,6 +148,7 @@
 		BA41DAE31AFA896300AB9616 /* Broker */ = {
 			isa = PBXGroup;
 			children = (
+				BAEF1D251B4BB66D00BAD7F3 /* Lib */,
 				BA41DB1F1AFC087C00AB9616 /* Controllers */,
 				BA41DB1E1AFC087600AB9616 /* Views */,
 				BA41DB1D1AFC086E00AB9616 /* Models */,
@@ -217,8 +223,18 @@
 				BA9D30EE1B03A96100870B46 /* ReviewApartmentsTableViewController.swift */,
 				BA3B4DF71AFF3BFD00AAB6E8 /* ApartmentChecksViewController.swift */,
 				BA3B4DF91AFF3C6600AAB6E8 /* ApartmentMediaUploadViewController.swift */,
+				BAEF1D201B4A61CA00BAD7F3 /* ApartmentVideoUploadController.swift */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		BAEF1D251B4BB66D00BAD7F3 /* Lib */ = {
+			isa = PBXGroup;
+			children = (
+				BAEF1D221B4BB66600BAD7F3 /* SDAVAssetExportSession.h */,
+				BAEF1D231B4BB66600BAD7F3 /* SDAVAssetExportSession.m */,
+			);
+			name = Lib;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -366,10 +382,12 @@
 				BA41DB1A1AFB648B00AB9616 /* AddImageButtonCell.swift in Sources */,
 				BA41DB0B1AFA8E1A00AB9616 /* ApartmentInfomationTableViewController.swift in Sources */,
 				BA41DB211AFC0A4000AB9616 /* APIModel.swift in Sources */,
+				BAEF1D211B4A61CA00BAD7F3 /* ApartmentVideoUploadController.swift in Sources */,
 				BA9D30F31B03B0AA00870B46 /* ApartmentProfileModel.swift in Sources */,
 				BA41DB0D1AFA8E5900AB9616 /* ApartmentTextCell.swift in Sources */,
 				BA41DB151AFB296500AB9616 /* UploadingImageCell.swift in Sources */,
 				BA9D30F11B03AA4700870B46 /* ReviewApartmentCell.swift in Sources */,
+				BAEF1D241B4BB66600BAD7F3 /* SDAVAssetExportSession.m in Sources */,
 				BA9D30EF1B03A96100870B46 /* ReviewApartmentsTableViewController.swift in Sources */,
 				BA41DAE71AFA896300AB9616 /* AppDelegate.swift in Sources */,
 				BAB6D4C41AFC471C005DBDFE /* ApartmentModel.swift in Sources */,

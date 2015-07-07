@@ -12,5 +12,6 @@
 #import <AWSS3/AWSS3.h>
 #import <CTAssetsPickerController.h>
 #import <SDWebImage/UIImageView+WebCache.h>
+#import "SDAVAssetExportSession.h"
 
 #endif

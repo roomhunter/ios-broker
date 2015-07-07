@@ -38,24 +38,24 @@ class ApartmentModel {
     static let additionalInfoArray = ["Additional Info for room amenities", "Additional Info for building facilities"]
     
     let dateFormatter = NSDateFormatter()
+    let api = APIModel.sharedInstance
+    let geoCoder = CLGeocoder()
 
     var basicInformationDict = [String: String]()
     var apartmentAmenitiesDict = [String: Bool]()
     var buildingFacilitiesDict = [String: Bool]()
     var additionalInfoDict = [String: String]()
+    var moveinDate = NSDate()
+    var coordinate: [Double]?
     
     var addressLine1: String?
     var addressLine2: String?
     var cityCountryString = "New York"
     
+    var videoUrl: String?
+    var videoUploadRequests = [AWSS3TransferManagerUploadRequest?]()
     var imageUrls = [String?]()
     var coverIndex: Int?
-    var moveinDate = NSDate()
-    var coordinate: [Double]?
-    
-    let api = APIModel.sharedInstance
-    let geoCoder = CLGeocoder()
-    
     var uploadRequests = [AWSS3TransferManagerUploadRequest?]()
     var imageThumbnails = [UIImage]()
     var failedRequests = Dictionary<Int, Bool>()

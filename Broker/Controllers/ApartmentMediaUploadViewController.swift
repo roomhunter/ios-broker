@@ -7,16 +7,20 @@
 //
 
 import UIKit
+import MobileCoreServices
 
-class ApartmentMediaUploadViewController: UITableViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, CTAssetsPickerControllerDelegate, UINavigationControllerDelegate {
+
+class ApartmentMediaUploadViewController: UITableViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, CTAssetsPickerControllerDelegate, UINavigationControllerDelegate, ApartmentVideoUploadDelegate {
     
     let imagesActionSheet = UIActionSheet(title: "Image From", delegate: nil, cancelButtonTitle: "Cancel", destructiveButtonTitle: "From Library")
     
     let imagesPicker = UIImagePickerController()
+    let videoPicker = UIImagePickerController()
     let multipleImagesPicker = CTAssetsPickerController()
+    let videoController = ApartmentVideoUploadController()
     var collectionView: UICollectionView?
+    var videoCollectionView: UICollectionView?
     var submitButtonCell: ApartmentSubmitButtonCell?
-    
     var newApartment: ApartmentModel!
 
     override func viewDidLoad() {
@@ -27,11 +31,18 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
             imagesActionSheet.addButtonWithTitle("Take Photo")
             imagesPicker.sourceType = .Camera
-
         }
         imagesPicker.delegate = self
+        videoPicker.delegate = videoController
+        videoPicker.mediaTypes = [kUTTypeMovie!]
+        videoPicker.allowsEditing = false
+        
         multipleImagesPicker.delegate = self
         multipleImagesPicker.assetsFilter = ALAssetsFilter.allPhotos()
+        videoController.newApartment = newApartment
+        videoController.tableView = tableView
+        videoController.delegate = self
+        
         var error = NSErrorPointer()
         
         if !NSFileManager.defaultManager().createDirectoryAtPath(
@@ -47,29 +58,38 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
+    
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         let section = indexPath.section
         switch section {
         case 0:
             return 260
+        case 1:
+            return 100
         default:
             return 44
         }
     }
+    
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
             return "Select Images"
+        case 1:
+            return "Select Video"
         default:
             return nil
         }
     }
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
@@ -78,8 +98,13 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
             cell.imagesCollectionView.delegate = self
             collectionView = cell.imagesCollectionView
             return cell
-        
         case 1:
+            let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentUploadingImagesCollectionCell", forIndexPath: indexPath) as!
+                ApartmentUploadingImagesCollectionCell
+            cell.imagesCollectionView.dataSource = videoController
+            cell.imagesCollectionView.delegate = videoController
+            return cell
+        case 2:
             let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentSubmitButtonCell", forIndexPath: indexPath) as! ApartmentSubmitButtonCell
             submitButtonCell = cell
             submitButtonCell?.state = newApartment.mediaState
@@ -87,8 +112,43 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
         default:
             return UITableViewCell()
         }
-
     }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let section = indexPath.section
+        // last cell is the submit button
+        if section + 1 == tableView.numberOfSections() {
+            if newApartment?.mediaState == ApartmentMediaState.Ready {
+                submitButtonCell?.state = ApartmentMediaState.Loading
+                newApartment.submit({[unowned self] (res: NSDictionary) in
+                    self.newApartment.renewApartment()
+                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                    
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.submitButtonCell?.state = .Success
+                        
+                        dispatch_after(delayTime, dispatch_get_main_queue(), {
+                            self.navigationController?.popToRootViewControllerAnimated(true)
+                        })
+                    })
+                    }, fail: {[unowned self] (err: NSError) in
+                        
+                        let alertController = UIAlertController(title: "Failed", message: "Server Response Error", preferredStyle: .Alert)
+                        
+                        let OKAction = UIAlertAction(title: "Retry", style: .Default) { (action) in
+                            self.submitButtonCell?.state = .Ready
+                            self.submitButtonCell?.setSelected(false, animated: true)
+                        }
+                        alertController.addAction(OKAction)
+                        
+                        self.presentViewController(alertController, animated: true) {
+                            
+                        }
+                    })
+            }
+        }
+    }
+    
     func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
         switch buttonIndex {
         case 0: // from library
@@ -101,6 +161,24 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
             break
         }
     }
+    
+    func didSelectToRecordVideo() {
+        videoPicker.sourceType = .Camera
+//        videoPicker.mediaTypes = [kUTTypeMovie!]
+//        videoPicker.allowsEditing = false
+        videoPicker.showsCameraControls = true
+
+        self.presentViewController(videoPicker, animated: true, completion: nil)
+    }
+    
+    func didSelectToPickFromLibrary() {
+        videoPicker.sourceType = .PhotoLibrary
+//        videoPicker.showsCameraControls = false
+
+        self.presentViewController(videoPicker, animated: true, completion: nil)
+    }
+    
+    // image picker delegates
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         picker.dismissViewControllerAnimated(true, completion: nil)
         
@@ -131,6 +209,9 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
                 })
             })
     }
+    
+    // multiple images selection delegates
+    
     func assetsPickerController(picker: CTAssetsPickerController!, shouldSelectAsset asset: ALAsset!) -> Bool {
         return picker.selectedAssets.count < 8
     }
@@ -141,7 +222,6 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
 
             for asset in assets {
                 let representation = (asset as! ALAsset).defaultRepresentation()
-//                let fullImage = UIImage(CGImage: representation.fullResolutionImage().takeUnretainedValue())
                 let fullImage = UIImage(CGImage: representation.fullResolutionImage().takeUnretainedValue(), scale: 1, orientation: UIImageOrientation(rawValue: representation.orientation().rawValue)!)
             
                 self.newApartment.imageThumbnails.append(self.getThumbnailFrom(fullImage!))
@@ -172,19 +252,24 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
             })
         })
     }
-
+    
+    // collection view controller delegates
+    
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return newApartment.uploadRequests.count + 1
     }
+    
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("UploadingImageCell", forIndexPath: indexPath) as! UploadingImageCell
         let row = indexPath.row
         
+        // add image button
         if row == newApartment.uploadRequests.count {
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier("AddImageButtonCell", forIndexPath: indexPath) as! UICollectionViewCell
             return cell
         }
         
+        // image cell
         cell.imageView.image = newApartment.imageThumbnails[row]
         cell.coverLabel.hidden = true
         
@@ -233,7 +318,6 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
         
         return cell
     }
-
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let row = indexPath.row
@@ -248,43 +332,6 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
                 tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: .Fade)
 
             }
-        }
-    }
-    
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let section = indexPath.section
-        // last cell is the submit button
-        if section + 1 == tableView.numberOfSections() {
-            if newApartment?.mediaState == ApartmentMediaState.Ready {
-                submitButtonCell?.state = ApartmentMediaState.Loading
-                newApartment.submit({[unowned self] (res: NSDictionary) in
-                    self.newApartment.renewApartment()
-                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
-
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.submitButtonCell?.state = .Success
-                        
-                        dispatch_after(delayTime, dispatch_get_main_queue(), {
-                            self.navigationController?.popToRootViewControllerAnimated(true)
-                        })
-                    })
-                    }, fail: {[unowned self] (err: NSError) in
-    
-                        let alertController = UIAlertController(title: "Failed", message: "Server Response Error", preferredStyle: .Alert)
-    
-                        let OKAction = UIAlertAction(title: "Retry", style: .Default) { (action) in
-                            self.submitButtonCell?.state = .Ready
-                            self.submitButtonCell?.setSelected(false, animated: true)
-                        }
-                        alertController.addAction(OKAction)
-                        
-                        self.presentViewController(alertController, animated: true) {
-                            
-                        }
-                })
-                
-            }
-
         }
     }
 
@@ -353,6 +400,7 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
             return nil
         }
     }
+    
     func indexOfUploadRequest(array: [AWSS3TransferManagerUploadRequest?], uploadRequest: AWSS3TransferManagerUploadRequest?) -> Int? {
         for (index, object) in enumerate(array) {
             if object == uploadRequest {
