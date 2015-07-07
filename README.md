@@ -34,4 +34,5 @@ References
 - Image Uploading with `AWSS3 SDK`: https://github.com/aws/aws-sdk-ios
 - Multiple images selection with `CTAssetsPickerController`: https://github.com/chiunam/CTAssetsPickerController
 - Table view image cache with `SDWebImage`: https://github.com/rs/SDWebImage
+- Video preocessing with `SDAVAssetExportSession`: https://github.com/rs/SDAVAssetExportSession
 
