@@ -470,7 +470,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="fkC-ep-dmR">
-                                            <rect key="frame" x="8" y="0.0" width="359" height="259"/>
+                                            <rect key="frame" x="8" y="8" width="359" height="243.5"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="260" id="m7c-En-5DY"/>
@@ -561,8 +561,8 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add Images (&lt;=8 each selection)" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pb9-Hb-lkW">
-                                                                <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add Images (&lt;=20)" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pb9-Hb-lkW">
+                                                                <rect key="frame" x="8" y="8" width="64" height="64"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
@@ -571,13 +571,13 @@
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     </view>
                                                     <constraints>
-                                                        <constraint firstAttribute="bottomMargin" secondItem="pb9-Hb-lkW" secondAttribute="bottom" constant="-8" id="92R-hG-vhu"/>
-                                                        <constraint firstItem="pb9-Hb-lkW" firstAttribute="top" secondItem="CWU-LD-dfp" secondAttribute="topMargin" constant="-8" id="EUN-qb-ihk"/>
-                                                        <constraint firstItem="pb9-Hb-lkW" firstAttribute="leading" secondItem="CWU-LD-dfp" secondAttribute="leadingMargin" constant="-8" id="EvS-ZX-ETA"/>
-                                                        <constraint firstAttribute="trailingMargin" secondItem="pb9-Hb-lkW" secondAttribute="trailing" constant="-8" id="Yry-Hz-1OZ"/>
+                                                        <constraint firstAttribute="bottomMargin" secondItem="pb9-Hb-lkW" secondAttribute="bottom" id="92R-hG-vhu"/>
+                                                        <constraint firstItem="pb9-Hb-lkW" firstAttribute="top" secondItem="CWU-LD-dfp" secondAttribute="topMargin" id="EUN-qb-ihk"/>
+                                                        <constraint firstItem="pb9-Hb-lkW" firstAttribute="leading" secondItem="CWU-LD-dfp" secondAttribute="leadingMargin" id="EvS-ZX-ETA"/>
+                                                        <constraint firstAttribute="trailingMargin" secondItem="pb9-Hb-lkW" secondAttribute="trailing" id="Yry-Hz-1OZ"/>
                                                     </constraints>
                                                 </collectionViewCell>
-                                                <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AddVideoButtonCell" id="9B8-aV-vDC" customClass="AddVideoButtonCell">
+                                                <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AddVideoButtonCell" id="9B8-aV-vDC" customClass="AddImageButtonCell" customModule="Broker" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -585,7 +585,7 @@
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add One Video" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xbO-DH-LKn">
-                                                                <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+                                                                <rect key="frame" x="8" y="8" width="64" height="64"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
@@ -594,10 +594,10 @@
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     </view>
                                                     <constraints>
-                                                        <constraint firstAttribute="bottomMargin" secondItem="xbO-DH-LKn" secondAttribute="bottom" constant="-8" id="CNQ-Kc-5gN"/>
-                                                        <constraint firstItem="xbO-DH-LKn" firstAttribute="top" secondItem="9B8-aV-vDC" secondAttribute="topMargin" constant="-8" id="LwP-0L-GHK"/>
-                                                        <constraint firstItem="xbO-DH-LKn" firstAttribute="leading" secondItem="9B8-aV-vDC" secondAttribute="leadingMargin" constant="-8" id="YYP-Ue-6Ey"/>
-                                                        <constraint firstAttribute="trailingMargin" secondItem="xbO-DH-LKn" secondAttribute="trailing" constant="-8" id="y2d-e7-cJl"/>
+                                                        <constraint firstAttribute="bottomMargin" secondItem="xbO-DH-LKn" secondAttribute="bottom" id="CNQ-Kc-5gN"/>
+                                                        <constraint firstItem="xbO-DH-LKn" firstAttribute="top" secondItem="9B8-aV-vDC" secondAttribute="topMargin" id="LwP-0L-GHK"/>
+                                                        <constraint firstItem="xbO-DH-LKn" firstAttribute="leading" secondItem="9B8-aV-vDC" secondAttribute="leadingMargin" id="YYP-Ue-6Ey"/>
+                                                        <constraint firstAttribute="trailingMargin" secondItem="xbO-DH-LKn" secondAttribute="trailing" id="y2d-e7-cJl"/>
                                                     </constraints>
                                                 </collectionViewCell>
                                             </cells>
@@ -609,9 +609,9 @@
                                         </collectionView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="bottomMargin" secondItem="fkC-ep-dmR" secondAttribute="bottom" constant="-8" id="I99-KR-1oM"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="fkC-ep-dmR" secondAttribute="bottom" id="I99-KR-1oM"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="fkC-ep-dmR" secondAttribute="trailing" id="SPG-66-eMG"/>
-                                        <constraint firstItem="fkC-ep-dmR" firstAttribute="top" secondItem="J87-2S-bVs" secondAttribute="topMargin" constant="-8" id="esF-nH-Hl0"/>
+                                        <constraint firstItem="fkC-ep-dmR" firstAttribute="top" secondItem="J87-2S-bVs" secondAttribute="topMargin" id="esF-nH-Hl0"/>
                                         <constraint firstItem="fkC-ep-dmR" firstAttribute="leading" secondItem="J87-2S-bVs" secondAttribute="leadingMargin" id="gyY-1n-7GY"/>
                                         <constraint firstAttribute="centerY" secondItem="fkC-ep-dmR" secondAttribute="centerY" id="yfp-R7-f6T"/>
                                     </constraints>

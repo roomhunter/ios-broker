@@ -17,7 +17,7 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
     let imagesPicker = UIImagePickerController()
     let videoPicker = UIImagePickerController()
     let multipleImagesPicker = CTAssetsPickerController()
-    let videoController = ApartmentVideoUploadController()
+    var videoController: ApartmentVideoUploadController!
     var collectionView: UICollectionView?
     var videoCollectionView: UICollectionView?
     var submitButtonCell: ApartmentSubmitButtonCell?
@@ -32,6 +32,7 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
             imagesActionSheet.addButtonWithTitle("Take Photo")
             imagesPicker.sourceType = .Camera
         }
+        videoController = ApartmentVideoUploadController(mediaController: self)
         imagesPicker.delegate = self
         videoPicker.delegate = videoController
         videoPicker.mediaTypes = [kUTTypeMovie!]
@@ -39,8 +40,6 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
         
         multipleImagesPicker.delegate = self
         multipleImagesPicker.assetsFilter = ALAssetsFilter.allPhotos()
-        videoController.newApartment = newApartment
-        videoController.tableView = tableView
         videoController.delegate = self
         
         var error = NSErrorPointer()
@@ -73,7 +72,7 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
         case 0:
             return 260
         case 1:
-            return 100
+            return 110
         default:
             return 44
         }
@@ -84,7 +83,7 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
         case 0:
             return "Select Images"
         case 1:
-            return "Select Video"
+            return "Select Videos (optional but strongly recommend)"
         default:
             return nil
         }
@@ -103,6 +102,7 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
                 ApartmentUploadingImagesCollectionCell
             cell.imagesCollectionView.dataSource = videoController
             cell.imagesCollectionView.delegate = videoController
+            self.videoCollectionView = cell.imagesCollectionView
             return cell
         case 2:
             let cell = tableView.dequeueReusableCellWithIdentifier("ApartmentSubmitButtonCell", forIndexPath: indexPath) as! ApartmentSubmitButtonCell
@@ -202,8 +202,7 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
                 let items = self.newApartment.uploadRequests.count - 1
                 self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: items, inSection: 0)])
                 // upload method must be called before items insertion, otherwize, it is possible that upload is finished and it reload the item before insertion
-                self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: UITableViewRowAnimation.Fade)
-
+                self.refreshSubmitButton()
                 self.upload(uploadRequest)
                 
                 })
@@ -213,7 +212,7 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
     // multiple images selection delegates
     
     func assetsPickerController(picker: CTAssetsPickerController!, shouldSelectAsset asset: ALAsset!) -> Bool {
-        return picker.selectedAssets.count < 8
+        return picker.selectedAssets.count < 20
     }
     
     func assetsPickerController(picker: CTAssetsPickerController!, didFinishPickingAssets assets: [AnyObject]!) {
@@ -246,8 +245,7 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
                 })
             }
             dispatch_async(dispatch_get_main_queue(), { [unowned self] in
-                self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: UITableViewRowAnimation.Fade)
-
+                self.refreshSubmitButton()
                 self.multipleImagesPicker.selectedAssets = []
             })
         })
@@ -329,8 +327,7 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
             if newApartment.mediaState == .Ready || newApartment.mediaState == .SelectCover {
                 newApartment.coverIndex = row
                 collectionView.reloadData()
-                tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: .Fade)
-
+                self.refreshSubmitButton()
             }
         }
     }
@@ -377,8 +374,7 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
                         self.newApartment.failedRequests[index] = true
                         let indexPath = NSIndexPath(forRow: index, inSection: 0)
                         self.collectionView?.reloadItemsAtIndexPaths([indexPath])
-                        self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: UITableViewRowAnimation.Fade)
-
+                        self.refreshSubmitButton()
                     })
                     println("upload() failed: [\(index)]")
 
@@ -390,9 +386,8 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
                 if let index = self.indexOfUploadRequest(self.newApartment.uploadRequests, uploadRequest: uploadRequest) {
                     let indexPath = NSIndexPath(forRow: index, inSection: 0)
                     self.newApartment.imageUrls[index] = "https://d1mnrj0eye9ccu.cloudfront.net/\(uploadRequest.key)"
-                    
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: UITableViewRowAnimation.Fade)
+                        self.refreshSubmitButton()
                         self.collectionView?.reloadItemsAtIndexPaths([indexPath])
                     })
                 }
@@ -408,6 +403,10 @@ class ApartmentMediaUploadViewController: UITableViewController, UICollectionVie
             }
         }
         return nil
+    }
+    
+    func refreshSubmitButton() {
+        self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 2)], withRowAnimation: UITableViewRowAnimation.Fade)
     }
     /*
     // MARK: - Navigation

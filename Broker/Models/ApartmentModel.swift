@@ -52,13 +52,16 @@ class ApartmentModel {
     var addressLine2: String?
     var cityCountryString = "New York"
     
-    var videoUrl: String?
+    var videoUrls = [String?]()
     var videoUploadRequests = [AWSS3TransferManagerUploadRequest?]()
-    var imageUrls = [String?]()
+    var videoThumbnails = [UIImage]()
+    var failedVideoRequests = [Int: Bool]()
+    
     var coverIndex: Int?
     var uploadRequests = [AWSS3TransferManagerUploadRequest?]()
+    var imageUrls = [String?]()
     var imageThumbnails = [UIImage]()
-    var failedRequests = Dictionary<Int, Bool>()
+    var failedRequests = [Int: Bool]()
     
     var renewed = false
     
@@ -116,7 +119,7 @@ class ApartmentModel {
         dict["additionalInfo2"] = additionalInfoDict[ApartmentModel.additionalInfoArray[1]]
         dict["coordinates"] = coordinate
         
-//        dict["videos"] =
+        dict["videos"] = convertVideos(videoUrls)
 //        dict["applicationDoc"] =
         
         return dict
@@ -137,7 +140,6 @@ class ApartmentModel {
 
         // check numbers
         let totalPrice = basicInformationDict["Monthly Rental"]?.toInt()
-//        let orderPrice = basicInformationDict["Order Price"]?.toInt()
         let brokerFee = basicInformationDict["Broker Fee (%)"]?.toInt()
         let bedrooms = basicInformationDict["How Many Bedrooms"]?.toInt()
         let bathrooms = NSNumberFormatter().numberFromString(basicInformationDict["How Many Bathrooms"]!)?.doubleValue
@@ -203,12 +205,20 @@ class ApartmentModel {
         addressLine2 = nil
         cityCountryString = "New York"
         
-        imageUrls = []
         moveinDate = NSDate()
         coordinate = nil
+        coverIndex = nil
         
+        videoUrls = []
+        videoUploadRequests = []
+        videoThumbnails = []
+        failedVideoRequests = [Int: Bool]()
+
+        
+        imageUrls = []
         uploadRequests = []
         imageThumbnails = []
+        failedRequests = [Int: Bool]()
         
         renewed = true
     }
@@ -245,5 +255,17 @@ class ApartmentModel {
             }
         }
         return urls
+    }
+    
+    func convertVideos(videos: [String?]) -> [String] {
+        var urls = [String]()
+        
+        for (index, url) in enumerate(videos) {
+            if failedVideoRequests[index] == nil {
+                urls.append(url!)
+            }
+        }
+        return urls
+
     }
 }
