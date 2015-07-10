@@ -23,10 +23,10 @@ Tasks
 - [x] add feature of cover image selction
 - [x] remove unavailable apartment
 - [ ] rewrite some hard code of view -> key
-- [ ] video
+- [x] video
     - [x] video compression
     - [x] video uploading
-    - [ ] video uploading UI
+    - [x] video uploading UI
 
 References
 ----------
